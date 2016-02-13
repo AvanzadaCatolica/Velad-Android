@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">Velad</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Abrir navegación</string>
+    <string name="navigation_drawer_close">Cerrar navegación</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="menu_item_title_today">Hoy</string>
+    <string name="menu_item_title_diary">Diario</string>
+    <string name="menu_item_title_week">Semana</string>
+    <string name="menu_item_title_reports">Reportes</string>
+    <string name="menu_item_title_settings">Configuración</string>
 </resources>
