@@ -9,4 +9,10 @@
     <string name="menu_item_title_week">Semana</string>
     <string name="menu_item_title_reports">Reportes</string>
     <string name="menu_item_title_settings">Configuración</string>
+
+    <string name="menu_item_title_add">Agregar</string>
+    <string name="menu_item_title_filter">Filtrar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
