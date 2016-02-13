@@ -11,11 +11,19 @@ Velad is open source because we believe in the open source philosophy. If you wo
 
 __Requirements:__
 
-TBD
+* JDK 1.7.0_79
+* Gradle 2.8
+* Android SDK
 
 __Building:__
 
-TBD
+Velad uses Gradle as build system. In order to build this project, define the Android SDK location with sdk.dir by creating a local.properties file or with an ANDROID_HOME environment variable. Then run:
+
+```
+gradle assembleDebug
+```
+
+You'll find the debug APK in `Velad-Android/app/build/outputs/apk`.
 
 __Tests:__
 
