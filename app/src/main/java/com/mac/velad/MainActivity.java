@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
     private void navigate(int menuId) {
         getSupportActionBar().setTitle(getTitle(menuId));
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, getFragment(menuId)).commit();
+                .replace(R.id.fragment_container, getFragment(menuId)).commit();
     }
 
     private String getTitle(int menuId) {
