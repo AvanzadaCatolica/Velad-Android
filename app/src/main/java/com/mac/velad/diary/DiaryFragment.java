@@ -1,4 +1,4 @@
-package com.mac.velad;
+package com.mac.velad.diary;
 
 
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.mac.velad.R;
 
 public class DiaryFragment extends Fragment {
 
