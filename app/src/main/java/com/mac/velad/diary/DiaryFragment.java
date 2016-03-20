@@ -14,10 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.mac.velad.R;
 import com.mac.velad.general.DateIntervalPickerFragment;
 import com.mac.velad.general.RecyclerItemClickListener;
+
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -32,6 +35,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
     public final static String NOTE_UUID_EXTRA = "NOTE_UUID";
 
     private RecyclerView recyclerView;
+    private LinearLayout contentEmpty;
     private NoteAdapter adapter;
     private RealmResults dataSet;
     private DiaryFilterType filterType = DiaryFilterType.DIARY_FILTER_TYPE_ALL;
@@ -57,7 +61,9 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_diary, container, false);
+        setupEmptyView(view);
         setupRecyclerView(view);
+        updateContentEmpty();
         return view;
     }
 
@@ -66,6 +72,9 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         switch (item.getItemId()) {
             case R.id.menu_item_add:
                 addNote();
+                return true;
+            case R.id.menu_item_register:
+                confess();
                 return true;
             case R.id.menu_item_filter_all:
                 setupFilter(DiaryFilterType.DIARY_FILTER_TYPE_ALL);
@@ -94,6 +103,12 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.fragment_diary_menu, menu);
+        MenuItem item = menu.findItem(R.id.menu_item_register);
+        if (filterType == DiaryFilterType.DIARY_FILTER_TYPE_CONFESSABLE && dataSet.size() > 0) {
+            item.setVisible(true);
+        } else {
+            item.setVisible(false);
+        }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -106,9 +121,55 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                mail();
             }
         });
+    }
+
+    private void updateContentEmpty() {
+        if (dataSet.size() > 0) {
+            recyclerView.setVisibility(View.VISIBLE);
+            contentEmpty.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            contentEmpty.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void mail() {
+
+    }
+
+    private void confess() {
+        Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), R.string.diary_confess_confirmation_text, Snackbar.LENGTH_LONG)
+                .setAction(R.string.diary_confess_confirmation_action, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        registerConfession();
+                    }
+                })
+                .show();
+    }
+
+    private void registerConfession() {
+        Realm realm = Realm.getInstance(getContext());
+        realm.beginTransaction();
+
+        while (dataSet.size() > 0) {
+            Note note = (Note) dataSet.first();
+            note.setState(NoteState.CONFESSED.toString());
+            note.setDate(new Date());
+        }
+
+        realm.commitTransaction();
+
+        updateFragment();
+    }
+
+    private void updateFragment() {
+        adapter.notifyDataSetChanged();
+        updateContentEmpty();
+        getActivity().invalidateOptionsMenu();
     }
 
     private void addNote() {
@@ -147,7 +208,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
             return;
         }
 
-        adapter.notifyDataSetChanged();
+        updateFragment();
     }
 
     private void setupRecyclerView(View view) {
@@ -172,13 +233,17 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         }));
     }
 
+    private void setupEmptyView(View view) {
+        contentEmpty = (LinearLayout) view.findViewById(R.id.content_empty);
+    }
+
     private void showDeleteConfirmation(final int position) {
-        Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), "Borrar nota?", Snackbar.LENGTH_LONG)
-                .setAction("Borrar", new View.OnClickListener() {
+        Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), R.string.diary_delete_note_confirmation_text, Snackbar.LENGTH_LONG)
+                .setAction(R.string.diary_delete_note_confirmation_action, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         deleteNote(position);
-                        adapter.notifyDataSetChanged();
+                        updateFragment();
                     }
                 })
                 .show();
@@ -215,7 +280,6 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
                 return;
             }
         }
-
         this.filterType = filterType;
 
         switch (filterType) {
@@ -241,7 +305,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         }
 
         adapter.setDataSet(dataSet);
-        adapter.notifyDataSetChanged();
+        updateFragment();
     }
 
 }
