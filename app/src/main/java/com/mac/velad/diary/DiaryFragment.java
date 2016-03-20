@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 
 import com.mac.velad.R;
 import com.mac.velad.general.DateIntervalPickerFragment;
-import com.mac.velad.general.RecyclerItemClickListener;
+import com.mac.velad.general.ItemClickSupport;
 
 import java.util.Date;
 
@@ -220,17 +220,21 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         adapter = new NoteAdapter(dataSet);
         recyclerView.setAdapter(adapter);
 
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+        ItemClickSupport support = ItemClickSupport.addTo(recyclerView);
+        support.setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemClicked(RecyclerView recyclerView, int position, View view) {
                 openNote(position);
             }
+        });
 
+        support.setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
             @Override
-            public void onItemLongPress(View childView, int position) {
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View view) {
                 showDeleteConfirmation(position);
+                return true;
             }
-        }));
+        });
     }
 
     private void setupEmptyView(View view) {
