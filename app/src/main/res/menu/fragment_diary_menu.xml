@@ -5,7 +5,28 @@
         android:id="@+id/menu_item_filter"
         android:title="@string/menu_item_title_filter"
         android:icon="@drawable/ic_filter_list_white_24dp"
-        app:showAsAction="always"/>
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/menu_item_filter_all"
+                android:title="@string/menu_item_filter_all_title" />
+            <item
+                android:id="@+id/menu_item_filter_regular"
+                android:title="@string/menu_item_filter_regular_title" />
+            <item
+                android:id="@+id/menu_item_filter_confessable"
+                android:title="@string/menu_item_filter_confessable_title" />
+            <item
+                android:id="@+id/menu_item_filter_confessed"
+                android:title="@string/menu_item_filter_confessed_title" />
+            <item
+                android:id="@+id/menu_item_filter_guidance"
+                android:title="@string/menu_item_filter_guidance_title" />
+            <item
+                android:id="@+id/menu_item_filter_weekly"
+                android:title="@string/menu_item_filter_weekly_title" />
+        </menu>
+    </item>
     <item
         android:id="@+id/menu_item_add"
         android:title="@string/menu_item_title_add"

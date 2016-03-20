@@ -29,6 +29,20 @@ public class Note extends RealmObject {
         return result;
     }
 
+    public static RealmResults<Note> getNotesBetween(Context context, Date startDate, Date endDate) {
+        Realm realm = Realm.getInstance(context);
+        RealmResults<Note> result = realm.where(Note.class).between("date", startDate, endDate).findAll();
+        result.sort("date", Sort.DESCENDING);
+        return result;
+    }
+
+    public static RealmResults<Note> getNotes(Context context, NoteState noteState) {
+        Realm realm = Realm.getInstance(context);
+        RealmResults<Note> result = realm.where(Note.class).equalTo("state", noteState.toString()).findAll();
+        result.sort("date", Sort.DESCENDING);
+        return result;
+    }
+
     public static Note getNote(Context context, String UUID) {
         Realm realm = Realm.getInstance(context);
         RealmResults<Note> result = realm.where(Note.class).equalTo("UUID", UUID).findAll();

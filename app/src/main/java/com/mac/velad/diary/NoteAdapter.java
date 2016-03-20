@@ -20,6 +20,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     private RealmResults<Note> dataSet;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
+    public void setDataSet(RealmResults<Note> dataSet) {
+        this.dataSet = dataSet;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_note, parent, false);

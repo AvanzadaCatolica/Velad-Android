@@ -13,11 +13,20 @@
     <string name="menu_item_title_add">Agregar</string>
     <string name="menu_item_title_filter">Filtrar</string>
     <string name="menu_item_title_save">Guardar</string>
-    
+
     <string name="error_message_missing_field">Por favor, llene todos los campos</string>
 
     <string name="note_activity_title">Nota</string>
     <string name="note_form_field_note">Nota</string>
     <string name="note_form_field_date">Fecha</string>
     <string name="note_form_field_type">Tipo</string>
+
+    <string name="menu_item_filter_all_title">Mostrar todas</string>
+    <string name="menu_item_filter_regular_title">Regulares</string>
+    <string name="menu_item_filter_confessable_title">Confesables</string>
+    <string name="menu_item_filter_confessed_title">Confesadas</string>
+    <string name="menu_item_filter_guidance_title">Guiamiento</string>
+    <string name="menu_item_filter_weekly_title">Por semana</string>
+
+    <string name="date_interval_picker_return_weekly_title">Ir a la semana actual</string>
 </resources>
