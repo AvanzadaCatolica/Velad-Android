@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.StateSet;
 import android.view.LayoutInflater;
@@ -61,7 +62,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     }
 
     private Drawable getStateDrawable() {
-        ColorDrawable colorDrawable = new ColorDrawable(context.getColor(R.color.colorSelected));
+        ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(context, R.color.colorSelected));
         StateListDrawable stateListDrawable = new StateListDrawable();
         stateListDrawable.addState(new int[]{16843518}, colorDrawable);
         stateListDrawable.addState(StateSet.WILD_CARD, null);

@@ -6,6 +6,10 @@
 *.apk
 *.ap_
 
+# Signing configuration
+release.keystore
+release.properties
+
 # Files for the Dalvik VM
 *.dex
 
