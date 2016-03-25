@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 
 import com.mac.velad.R;
 import com.mac.velad.general.DateIntervalPickerFragment;
+import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.general.ItemClickSupport;
 
 import java.util.Date;
@@ -216,6 +217,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
         adapter = new NoteAdapter(dataSet);
         recyclerView.setAdapter(adapter);
