@@ -62,7 +62,10 @@ public class SettingsFragment extends Fragment {
 
     private void setupFloatingButton() {
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        if (fab != null && fab.isShown()) {
+        if (fab == null) {
+            return;
+        }
+        if (fab.isShown()) {
             fab.hide();
         }
     }

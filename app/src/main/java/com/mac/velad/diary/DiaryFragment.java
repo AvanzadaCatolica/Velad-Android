@@ -122,6 +122,9 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
 
     private void setupFloatingButton() {
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        if (fab == null) {
+            return;
+        }
         fab.setImageResource(R.drawable.ic_email_white_24dp);
         if (!fab.isShown()) {
             fab.show();
