@@ -19,7 +19,9 @@
             android:textStyle="bold"
             android:textSize="16sp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"/>
         <TextView
             android:id="@+id/text_view_date"
             android:layout_width="match_parent"
@@ -27,9 +29,9 @@
     </LinearLayout>
     <TextView
         android:id="@+id/text_view_state"
-        android:layout_marginLeft="16dp"
         android:layout_width="0dp"
         android:layout_weight="0.3"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:gravity="right" />
 </LinearLayout>
