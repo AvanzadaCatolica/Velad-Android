@@ -40,7 +40,8 @@ dependencies {
 //Code from: https://www.thoughtworks.com/de/insights/blog/signing-open-source-android-apps-without-disclosing-passwords
 
 def props = new Properties()
-props.load(new FileInputStream(rootProject.file("release.properties")))
+def file = rootProject.file("release.properties")
+props.load(new FileInputStream(file? file : rootProject.file("release.properties.sample")))
 android.signingConfigs.release.storeFile rootProject.file(props.keyStore)
 android.signingConfigs.release.storePassword props.keyStorePassword
 android.signingConfigs.release.keyAlias props.keyAlias

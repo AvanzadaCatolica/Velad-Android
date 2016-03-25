@@ -23,7 +23,7 @@ Velad uses Gradle as build system. In order to build this project, define the An
 gradle assembleDebug
 ```
 
-You'll find the debug APK in `Velad-Android/app/build/outputs/apk`.
+You'll find the debug APK in `Velad-Android/app/build/outputs/apk` as `app-debug.apk`.
 
 __Tests:__
 
@@ -31,4 +31,10 @@ TBD
 
 __Packing:__
 
-TBD
+In order to pack the project (generate the apk file to upload to Google Play) you'll need to follow the instruction on the "Building" section, afterwards create a `release.properties` file with the required information (check the sample) and run:
+
+```
+gradle assembleRelease
+```
+
+You'll find the release APK in `Velad-Android/app/build/outputs/apk` as `app-release.apk`.
