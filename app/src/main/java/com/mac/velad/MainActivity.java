@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import com.mac.velad.diary.DiaryFragment;
 import com.mac.velad.settings.SettingsFragment;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,6 +37,32 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         navigate(R.id.nav_today);
+
+        if (!getResources().getBoolean(R.bool.store_build)) {
+            UpdateManager.register(this);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CrashManager.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!getResources().getBoolean(R.bool.store_build)) {
+            UpdateManager.unregister();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (!getResources().getBoolean(R.bool.store_build)) {
+            UpdateManager.unregister();
+        }
     }
 
     @Override

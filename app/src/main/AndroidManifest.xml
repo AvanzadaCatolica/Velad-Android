@@ -20,6 +20,7 @@
         </activity>
         <activity android:name=".diary.NoteActivity"></activity>
         <activity android:name=".settings.ProfileActivity"></activity>
+        <meta-data android:name="net.hockeyapp.android.appIdentifier" android:value="${HOCKEYAPP_APP_ID}" />
     </application>
 
 </manifest>

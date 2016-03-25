@@ -14,6 +14,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "0.0.1"
+        manifestPlaceholders = [HOCKEYAPP_APP_ID: "b3b8a67b202e4722b89e55f3e425a43f"]
     }
     buildTypes {
         release {
@@ -35,6 +36,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.2.1'
     compile 'com.android.support:recyclerview-v7:23.2.1'
     compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
+    compile 'net.hockeyapp.android:HockeySDK:3.7.1'
 }
 
 //Code from: https://www.thoughtworks.com/de/insights/blog/signing-open-source-android-apps-without-disclosing-passwords
