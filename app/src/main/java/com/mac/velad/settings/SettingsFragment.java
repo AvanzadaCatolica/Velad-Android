@@ -1,5 +1,6 @@
 package com.mac.velad.settings;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -61,7 +62,7 @@ public class SettingsFragment extends Fragment {
 
     private void setupFloatingButton() {
         FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
-        if (fab.isShown()) {
+        if (fab != null && fab.isShown()) {
             fab.hide();
         }
     }
@@ -116,7 +117,13 @@ public class SettingsFragment extends Fragment {
         support.setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-
+                switch (position) {
+                    case 0: {
+                        Intent intent = new Intent(getContext(), ProfileActivity.class);
+                        startActivity(intent);
+                        break;
+                    }
+                }
             }
         });
     }

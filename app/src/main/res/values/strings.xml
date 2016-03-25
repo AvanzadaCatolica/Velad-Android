@@ -14,6 +14,7 @@
     <string name="menu_item_title_add">Agregar</string>
     <string name="menu_item_title_filter">Filtrar</string>
     <string name="menu_item_title_save">Guardar</string>
+    <string name="menu_item_title_later">Ahora no</string>
     <string name="menu_item_title_register">Registrar</string>
     <string name="menu_item_title_delete">Borrar</string>
 
@@ -28,6 +29,11 @@
     <string name="note_form_field_note">Nota</string>
     <string name="note_form_field_date">Fecha</string>
     <string name="note_form_field_type">Tipo</string>
+
+    <string name="profile_activity_title">Perfil</string>
+    <string name="profile_form_field_name">Nombre</string>
+    <string name="profile_form_field_circle">Círculo</string>
+    <string name="profile_form_field_group">Grupo</string>
 
     <string name="menu_item_filter_all_title">Mostrar todas</string>
     <string name="menu_item_filter_regular_title">Regulares</string>
