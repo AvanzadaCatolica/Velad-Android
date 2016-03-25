@@ -8,6 +8,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,12 +18,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.bignerdranch.android.multiselector.MultiSelector;
 import com.mac.velad.R;
 import com.mac.velad.general.DateIntervalPickerFragment;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.general.ItemClickSupport;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -40,6 +45,8 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
     private NoteAdapter adapter;
     private RealmResults dataSet;
     private DiaryFilterType filterType = DiaryFilterType.DIARY_FILTER_TYPE_ALL;
+    private MultiSelector multiSelector = new MultiSelector();
+    private ActionMode currentActionMode;
 
     public DiaryFragment() {
         // Required empty public constructor
@@ -219,40 +226,89 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        adapter = new NoteAdapter(dataSet);
+        adapter = new NoteAdapter(dataSet, multiSelector);
         recyclerView.setAdapter(adapter);
 
         ItemClickSupport support = ItemClickSupport.addTo(recyclerView);
         support.setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-                openNote(position);
+                NoteAdapter.ViewHolder holder = (NoteAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+                if (multiSelector.tapSelection(holder)) {
+                    updateActionMode();
+                } else {
+                    openNote(position);
+                }
             }
         });
 
         support.setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClicked(RecyclerView recyclerView, int position, View view) {
-                showDeleteConfirmation(position);
+                if (currentActionMode != null) {
+                    return true;
+                }
+                Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+                currentActionMode = toolbar.startActionMode(new android.view.ActionMode.Callback() {
+                    @Override
+                    public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
+                        multiSelector.setSelectable(true);
+                        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+                        fab.hide();
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
+                        getActivity().getMenuInflater().inflate(R.menu.action_delete_menu, menu);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.menu_item_delete:
+                                deleteNotes(multiSelector.getSelectedPositions());
+                                currentActionMode.finish();
+                                updateFragment();
+                                return true;
+                            default:
+                                return true;
+                        }
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(android.view.ActionMode mode) {
+                        multiSelector.clearSelections();
+                        multiSelector.setSelectable(false);
+                        currentActionMode = null;
+                        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+                        fab.show();
+                    }
+                });
+                NoteAdapter.ViewHolder holder = (NoteAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+                multiSelector.setSelected(holder, true);
+                updateActionMode();
                 return true;
             }
         });
     }
 
-    private void setupEmptyView(View view) {
-        contentEmpty = (LinearLayout) view.findViewById(R.id.content_empty);
+    private void updateActionMode() {
+        if (currentActionMode == null) {
+            return;
+        }
+        int selected = multiSelector.getSelectedPositions().size();
+        if (selected == 0) {
+            currentActionMode.finish();
+        } else {
+            currentActionMode.setTitle(selected + " " + getString(R.string.action_mode_delete_title));
+        }
+
     }
 
-    private void showDeleteConfirmation(final int position) {
-        Snackbar.make(getActivity().findViewById(R.id.coordinator_layout), R.string.diary_delete_note_confirmation_text, Snackbar.LENGTH_LONG)
-                .setAction(R.string.diary_delete_note_confirmation_action, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        deleteNote(position);
-                        updateFragment();
-                    }
-                })
-                .show();
+    private void setupEmptyView(View view) {
+        contentEmpty = (LinearLayout) view.findViewById(R.id.content_empty);
     }
 
     private void openNote(int position) {
@@ -263,12 +319,18 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         startActivityForResult(intent, MODIFY_NOTE_REQUEST);
     }
 
-    private void deleteNote(int position) {
+    private void deleteNotes(List<Integer> positions) {
         Realm realm = Realm.getInstance(getContext());
         realm.beginTransaction();
 
-        Note note = (Note) dataSet.get(position);
-        note.removeFromRealm();
+        List<Note> notesToDelete = new ArrayList<>();
+        for (Integer position : positions) {
+            Note note = (Note) dataSet.get(position);
+            notesToDelete.add(note);
+        }
+        for (Note note : notesToDelete) {
+            note.removeFromRealm();
+        }
 
         realm.commitTransaction();
     }

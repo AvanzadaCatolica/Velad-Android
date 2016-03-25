@@ -14,13 +14,14 @@
     <string name="menu_item_title_filter">Filtrar</string>
     <string name="menu_item_title_save">Guardar</string>
     <string name="menu_item_title_register">Registrar</string>
+    <string name="menu_item_title_delete">Borrar</string>
 
     <string name="error_message_missing_field">Por favor, llene todos los campos</string>
-
-    <string name="diary_delete_note_confirmation_text">Borrar nota?</string>
-    <string name="diary_delete_note_confirmation_action">Borrar</string>
+    
     <string name="diary_confess_confirmation_text">Registrar confesión?</string>
     <string name="diary_confess_confirmation_action">Registrar</string>
+
+    <string name="action_mode_delete_title">Seleccionado</string>
 
     <string name="note_activity_title">Nota</string>
     <string name="note_form_field_note">Nota</string>

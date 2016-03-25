@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bignerdranch.android.multiselector.MultiSelector;
+import com.bignerdranch.android.multiselector.SwappingHolder;
 import com.mac.velad.R;
 
 import java.text.SimpleDateFormat;
@@ -19,6 +21,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     private RealmResults<Note> dataSet;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private MultiSelector multiSelector;
 
     public void setDataSet(RealmResults<Note> dataSet) {
         this.dataSet = dataSet;
@@ -27,7 +30,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_note, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view, multiSelector);
         return viewHolder;
     }
 
@@ -44,17 +47,18 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         return dataSet.size();
     }
 
-    public NoteAdapter(RealmResults<Note> dataSet) {
+    public NoteAdapter(RealmResults<Note> dataSet, MultiSelector multiSelector) {
         this.dataSet = dataSet;
+        this.multiSelector = multiSelector;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends SwappingHolder {
         public TextView textViewContent;
         public TextView textViewDate;
         public TextView textViewState;
 
-        public ViewHolder(View root) {
-            super(root);
+        public ViewHolder(View root, MultiSelector multiSelector) {
+            super(root, multiSelector);
             this.textViewContent = (TextView) root.findViewById(R.id.text_view_content);
             this.textViewDate = (TextView) root.findViewById(R.id.text_view_date);
             this.textViewState = (TextView) root.findViewById(R.id.text_view_state);
