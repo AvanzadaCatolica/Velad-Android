@@ -226,7 +226,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        adapter = new NoteAdapter(dataSet, multiSelector);
+        adapter = new NoteAdapter(getContext(), dataSet, multiSelector);
         recyclerView.setAdapter(adapter);
 
         ItemClickSupport support = ItemClickSupport.addTo(recyclerView);

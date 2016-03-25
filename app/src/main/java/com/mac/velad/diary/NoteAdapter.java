@@ -1,6 +1,11 @@
 package com.mac.velad.diary;
 
+import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.StateSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +27,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     private RealmResults<Note> dataSet;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private MultiSelector multiSelector;
+    private Context context;
 
     public void setDataSet(RealmResults<Note> dataSet) {
         this.dataSet = dataSet;
@@ -31,6 +37,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_note, parent, false);
         ViewHolder viewHolder = new ViewHolder(view, multiSelector);
+        viewHolder.setSelectionModeBackgroundDrawable(getStateDrawable());
         return viewHolder;
     }
 
@@ -47,9 +54,18 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         return dataSet.size();
     }
 
-    public NoteAdapter(RealmResults<Note> dataSet, MultiSelector multiSelector) {
+    public NoteAdapter(Context context, RealmResults<Note> dataSet, MultiSelector multiSelector) {
         this.dataSet = dataSet;
         this.multiSelector = multiSelector;
+        this.context = context;
+    }
+
+    private Drawable getStateDrawable() {
+        ColorDrawable colorDrawable = new ColorDrawable(context.getColor(R.color.colorSelected));
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        stateListDrawable.addState(new int[]{16843518}, colorDrawable);
+        stateListDrawable.addState(StateSet.WILD_CARD, null);
+        return stateListDrawable;
     }
 
     public static class ViewHolder extends SwappingHolder {
