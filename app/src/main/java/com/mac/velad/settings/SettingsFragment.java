@@ -1,9 +1,11 @@
 package com.mac.velad.settings;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.mac.velad.R;
 import com.mac.velad.SplashActivity;
+import com.mac.velad.general.CalendarHelper;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.general.ItemClickSupport;
 import com.mac.velad.general.VerticalSpaceItemDecoration;
@@ -85,7 +88,9 @@ public class SettingsFragment extends Fragment {
         Setting cheer = new Setting(getString(R.string.settings_cheer_title), Setting.SettingType.SETTING_TYPE_NORMAL);
         dataSet.add(cheer);
 
-        Setting monday = new BooleanSetting(getString(R.string.settings_monday_title), Setting.SettingType.SETTING_TYPE_BOOLEAN, false);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
+        boolean start = sharedPreferences.getBoolean(CalendarHelper.SHARED_PREFERENCES_START_MONDAY, false);
+        Setting monday = new BooleanSetting(getString(R.string.settings_monday_title), Setting.SettingType.SETTING_TYPE_BOOLEAN, start);
         monday.setDetails(getString(R.string.settings_monday_details));
         dataSet.add(monday);
 
@@ -113,7 +118,7 @@ public class SettingsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        VerticalSpaceItemDecoration verticalSpaceItemDecoration = new VerticalSpaceItemDecoration(90, Arrays.asList(2, 3, 4, 5));
+        VerticalSpaceItemDecoration verticalSpaceItemDecoration = new VerticalSpaceItemDecoration(90, Arrays.asList(2, 3, 4));
         recyclerView.addItemDecoration(verticalSpaceItemDecoration);
 
         ItemClickSupport support = ItemClickSupport.addTo(recyclerView);

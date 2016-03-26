@@ -1,23 +1,27 @@
 package com.mac.velad.settings;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.mac.velad.R;
+import com.mac.velad.general.CalendarHelper;
 
 import java.util.List;
 
 /**
  * Created by ruenzuo on 25/03/16.
  */
-public class SettingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnSettingClickListener {
+public class SettingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnSettingClickListener, OnBooleanSettingCheckedChangeListener {
 
     private List<Setting> dataSet;
     private Context context;
@@ -82,7 +86,9 @@ public class SettingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             case SETTING_TYPE_BOOLEAN: {
                 BooleanSettingViewHolder viewHolder = (BooleanSettingViewHolder) holder;
-                viewHolder.switchValue.setChecked(((BooleanSetting)setting).getValue());
+                BooleanSetting booleanSetting = (BooleanSetting) setting;
+                viewHolder.switchValue.setChecked(booleanSetting.getValue());
+                viewHolder.bind(booleanSetting, (OnBooleanSettingCheckedChangeListener) this);
                 break;
             }
             case SETTING_TYPE_INFO: {
@@ -102,6 +108,16 @@ public class SettingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onDetailsClick(Setting item) {
         InfoDialogFragment dialogFragment = InfoDialogFragment.newInstance(item.getDetails());
         dialogFragment.show(fragmentManager, InfoDialogFragment.class.toString());
+    }
+
+    @Override
+    public void onSettingChange(BooleanSetting item) {
+        item.setValue(!item.getValue());
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(CalendarHelper.SHARED_PREFERENCES_START_MONDAY, item.getValue());
+        editor.apply();
     }
 
     public static class SettingViewHolder extends RecyclerView.ViewHolder {
@@ -146,6 +162,15 @@ public class SettingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public BooleanSettingViewHolder(View root) {
             super(root);
             this.switchValue = (Switch) root.findViewById(R.id.switch_value);
+        }
+
+        public void bind(final BooleanSetting setting, final OnBooleanSettingCheckedChangeListener listener) {
+            this.switchValue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    listener.onSettingChange(setting);
+                }
+            });
         }
     }
 

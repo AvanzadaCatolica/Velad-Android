@@ -52,7 +52,7 @@ public class DateIntervalPickerFragment extends Fragment {
     }
 
     private void setupSelectedDate() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = CalendarHelper.getInstance(getContext());
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.clear(Calendar.MINUTE);
         calendar.clear(Calendar.SECOND);
@@ -124,12 +124,12 @@ public class DateIntervalPickerFragment extends Fragment {
     }
 
     private void showNext() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = CalendarHelper.getInstance(getContext());
         calendar.setTime(selectedStartDate);
         calendar.add(Calendar.WEEK_OF_YEAR, 1);
         selectedStartDate = calendar.getTime();
 
-        calendar = Calendar.getInstance();
+        calendar = CalendarHelper.getInstance(getContext());
         calendar.setTime(selectedEndDate);
         calendar.add(Calendar.WEEK_OF_YEAR, 1);
         selectedEndDate = calendar.getTime();
@@ -139,12 +139,12 @@ public class DateIntervalPickerFragment extends Fragment {
     }
 
     private void showPrevious() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = CalendarHelper.getInstance(getContext());
         calendar.setTime(selectedStartDate);
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
         selectedStartDate = calendar.getTime();
 
-        calendar = Calendar.getInstance();
+        calendar = CalendarHelper.getInstance(getContext());
         calendar.setTime(selectedEndDate);
         calendar.add(Calendar.WEEK_OF_YEAR, -1);
         selectedEndDate = calendar.getTime();

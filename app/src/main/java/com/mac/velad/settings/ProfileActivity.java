@@ -100,7 +100,7 @@ public class ProfileActivity extends FormWithAppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(SHARED_PREFERENCES_PROFILE_LATER, false);
-        editor.commit();
+        editor.apply();
 
         if (getIntent().getExtras().getBoolean(SplashActivity.FIRST_LAUNCH)) {
             Intent intent = new Intent(this, MainActivity.class);
