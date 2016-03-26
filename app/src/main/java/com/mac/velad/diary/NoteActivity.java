@@ -13,8 +13,8 @@ import com.github.dkharrat.nexusdialog.controllers.EditTextController;
 import com.github.dkharrat.nexusdialog.controllers.FormSectionController;
 import com.github.dkharrat.nexusdialog.controllers.SelectionController;
 import com.mac.velad.R;
+import com.mac.velad.general.DateFormat;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
@@ -31,7 +31,7 @@ public class NoteActivity extends FormWithAppCompatActivity {
     protected void initForm() {
         FormSectionController section = new FormSectionController(this);
         section.addElement(new EditTextController(this, NOTE_TEXT, getString(R.string.note_form_field_note), null, true));
-        section.addElement(new DatePickerController(this, NOTE_DATE, getString(R.string.note_form_field_date), true, new SimpleDateFormat("dd MMM yyyy")));
+        section.addElement(new DatePickerController(this, NOTE_DATE, getString(R.string.note_form_field_date), true, new DateFormat("dd MMM yyyy")));
         section.addElement(new SelectionController(this, NOTE_STATE, getString(R.string.note_form_field_type), true, null, Arrays.asList(NoteState.states()), Arrays.asList(NoteState.values())));
         getFormController().addSection(section);
 

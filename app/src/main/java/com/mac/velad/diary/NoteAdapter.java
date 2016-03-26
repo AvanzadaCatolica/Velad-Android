@@ -15,8 +15,7 @@ import android.widget.TextView;
 import com.bignerdranch.android.multiselector.MultiSelector;
 import com.bignerdranch.android.multiselector.SwappingHolder;
 import com.mac.velad.R;
-
-import java.text.SimpleDateFormat;
+import com.mac.velad.general.DateFormat;
 
 import io.realm.RealmResults;
 
@@ -26,12 +25,17 @@ import io.realm.RealmResults;
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     private RealmResults<Note> dataSet;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private Confession confession;
+    private DateFormat dateFormat = new DateFormat("dd/MM/yyyy");
     private MultiSelector multiSelector;
     private Context context;
 
     public void setDataSet(RealmResults<Note> dataSet) {
         this.dataSet = dataSet;
+    }
+
+    public void setConfession(Confession confession) {
+        this.confession = confession;
     }
 
     @Override
@@ -45,9 +49,17 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Note note = dataSet.get(position);
+        String format = dateFormat.format(note.getDate());
+
         holder.textViewContent.setText(note.getText());
-        holder.textViewDate.setText(dateFormat.format(note.getDate()));
+        holder.textViewDate.setText(format);
         holder.textViewState.setText(note.getState());
+
+        if (confession != null && dateFormat.format(confession.getDate()).equalsIgnoreCase(format)) {
+            holder.textViewDate.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        } else {
+            holder.textViewDate.setTextColor(holder.textViewState.getCurrentTextColor());
+        }
     }
 
     @Override

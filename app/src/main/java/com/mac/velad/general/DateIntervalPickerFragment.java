@@ -11,16 +11,16 @@ import android.widget.TextView;
 
 import com.mac.velad.R;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateIntervalPickerFragment extends Fragment {
 
     private Date selectedStartDate;
     private Date selectedEndDate;
-    private SimpleDateFormat dateFormatEnd = new SimpleDateFormat("dd 'de' MMMM");
-    private SimpleDateFormat dateFormatStart = new SimpleDateFormat("dd 'al' ");
+    private DateFormat dateFormatEnd = new DateFormat("dd 'de' MMMM");
+    private DateFormat dateFormatStart = new DateFormat("dd 'al' ");
 
     private DateIntervalPickerFragmentListener listener;
 
@@ -39,6 +39,10 @@ public class DateIntervalPickerFragment extends Fragment {
 
     public Date getSelectedEndDate() {
         return selectedEndDate;
+    }
+
+    public String getTitle() {
+        return dateFormatStart.format(selectedStartDate) + dateFormatEnd.format(selectedEndDate);
     }
 
     @Override
@@ -103,7 +107,7 @@ public class DateIntervalPickerFragment extends Fragment {
 
     private void updateDisplayedText(View container) {
         TextView textViewDate = (TextView) container.findViewById(R.id.text_view_date);
-        textViewDate.setText(dateFormatStart.format(selectedStartDate) + dateFormatEnd.format(selectedEndDate));
+        textViewDate.setText(getTitle());
 
         TextView textViewReturn = (TextView) container.findViewById(R.id.text_view_return);
         if (!isTodayInCurrentIntervalSelection()) {

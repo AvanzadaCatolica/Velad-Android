@@ -24,7 +24,7 @@ public class Confession extends RealmObject {
         Realm realm = Realm.getInstance(context);
         RealmResults<Confession> result = realm.where(Confession.class).findAll();
         result.sort("date", Sort.DESCENDING);
-        return result.first();
+        return result.size() > 0 ? result.first() : null;
     }
 
     public String getUUID() {

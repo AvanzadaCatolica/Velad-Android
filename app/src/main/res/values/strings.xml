@@ -55,4 +55,11 @@
     <string name="settings_version_title">Versión</string>
 
     <string name="settings_monday_details">Al estar seleccionado, todos los intervalos semanales empezarán el día Lunes.\n\nCaso contrario, se usará la configuración de región del dispositivo.</string>
+
+    <string name="diary_email_week_format">Semana %s\n\n</string>
+    <string name="diary_email_confession_format">Última confesión: %s\n\n</string>
+    <string name="diary_email_notes_header">Mis notas:\n\n</string>
+    <string name="profile_information_name_format">Nombre: %s\n</string>
+    <string name="profile_information_circle_format">Círculo: %s\n</string>
+    <string name="profile_information_group_format">Grupo: %s\n</string>
 </resources>

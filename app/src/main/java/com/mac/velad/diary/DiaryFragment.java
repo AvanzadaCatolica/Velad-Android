@@ -20,13 +20,16 @@ import android.widget.LinearLayout;
 
 import com.bignerdranch.android.multiselector.MultiSelector;
 import com.mac.velad.R;
+import com.mac.velad.general.DateFormat;
 import com.mac.velad.general.DateIntervalPickerFragment;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.general.ItemClickSupport;
+import com.mac.velad.settings.Profile;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -43,7 +46,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
     private RecyclerView recyclerView;
     private LinearLayout contentEmpty;
     private NoteAdapter adapter;
-    private RealmResults dataSet;
+    private RealmResults<Note> dataSet;
     private DiaryFilterType filterType = DiaryFilterType.DIARY_FILTER_TYPE_ALL;
     private MultiSelector multiSelector = new MultiSelector();
     private ActionMode currentActionMode;
@@ -148,7 +151,35 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
     }
 
     private void mail() {
+        StringBuilder builder = new StringBuilder();
+        DateFormat dateFormat = new DateFormat("dd/MM/yyyy");
 
+        Profile profile = Profile.getProfile(getContext());
+        if (profile != null) {
+            builder.append(Profile.profileInformation(getContext(), profile));
+        }
+
+        if (filterType == DiaryFilterType.DIARY_FILTER_TYPE_WEEKLY) {
+            DateIntervalPickerFragment fragment = (DateIntervalPickerFragment) getChildFragmentManager().findFragmentByTag(DateIntervalPickerFragment.class.toString());
+            builder.append(String.format(getString(R.string.diary_email_week_format), fragment.getTitle()));
+        }
+
+        Confession confession = Confession.getLastConfession(getContext());
+        if (confession != null) {
+            builder.append(String.format(getString(R.string.diary_email_confession_format), dateFormat.format(confession.getDate())));
+        }
+
+        builder.append(getString(R.string.diary_email_notes_header));
+
+        for (Note note : dataSet) {
+            builder.append(String.format("%s (%s - %s)\n", note.getText(), note.getState(), dateFormat.format(note.getDate())));
+        }
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, builder.toString());
+        intent.setType("text/plain");
+        startActivity(intent);
     }
 
     private void confess() {
@@ -166,11 +197,17 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         Realm realm = Realm.getInstance(getContext());
         realm.beginTransaction();
 
+        Date now = new Date();
         while (dataSet.size() > 0) {
             Note note = (Note) dataSet.first();
             note.setState(NoteState.CONFESSED.toString());
-            note.setDate(new Date());
+            note.setDate(now);
         }
+
+        Confession confession = new Confession();
+        confession.setUUID(UUID.randomUUID().toString());
+        confession.setDate(now);
+        realm.copyToRealm(confession);
 
         realm.commitTransaction();
 
@@ -179,6 +216,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
 
     private void updateFragment() {
         adapter.notifyDataSetChanged();
+        adapter.setConfession(Confession.getLastConfession(getContext()));
         updateContentEmpty();
         getActivity().invalidateOptionsMenu();
     }
@@ -230,6 +268,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
         adapter = new NoteAdapter(getContext(), dataSet, multiSelector);
+        adapter.setConfession(Confession.getLastConfession(getContext()));
         recyclerView.setAdapter(adapter);
 
         ItemClickSupport support = ItemClickSupport.addTo(recyclerView);
@@ -315,7 +354,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
     }
 
     private void openNote(int position) {
-        Note note = (Note) dataSet.get(position);
+        Note note = dataSet.get(position);
 
         Intent intent = new Intent(getContext(), NoteActivity.class);
         intent.putExtra(NOTE_UUID_EXTRA, note.getUUID());
@@ -328,7 +367,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
 
         List<Note> notesToDelete = new ArrayList<>();
         for (Integer position : positions) {
-            Note note = (Note) dataSet.get(position);
+            Note note = dataSet.get(position);
             notesToDelete.add(note);
         }
         for (Note note : notesToDelete) {

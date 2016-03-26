@@ -2,6 +2,8 @@ package com.mac.velad.settings;
 
 import android.content.Context;
 
+import com.mac.velad.R;
+
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
@@ -22,6 +24,22 @@ public class Profile extends RealmObject {
         Realm realm = Realm.getInstance(context);
         RealmResults<Profile> result = realm.where(Profile.class).findAll();
         return result.size() > 0 ? result.first() : null;
+    }
+
+    public static String profileInformation(Context context, Profile profile) {
+        StringBuilder builder = new StringBuilder();
+        if (profile.getName() != null && !profile.getName().isEmpty()) {
+            builder.append(String.format(context.getString(R.string.profile_information_name_format), profile.getName()));
+        }
+        if (profile.getCircle() != null && !profile.getCircle().isEmpty()) {
+            builder.append(String.format(context.getString(R.string.profile_information_circle_format), profile.getCircle()));
+        }
+        if (profile.getGroup() != null && !profile.getGroup().isEmpty()) {
+            builder.append(String.format(context.getString(R.string.profile_information_group_format), profile.getGroup()));
+        }
+        builder.append("\n");
+
+        return builder.toString();
     }
 
     public String getUUID() {
