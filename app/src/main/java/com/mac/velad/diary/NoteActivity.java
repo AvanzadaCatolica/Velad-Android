@@ -45,8 +45,6 @@ public class NoteActivity extends FormWithAppCompatActivity {
             getModel().setValue(NOTE_DATE, new Date());
             getModel().setValue(NOTE_STATE, NoteState.REGULAR);
         }
-
-        setTitle(getString(R.string.note_activity_title));
     }
 
     @Override

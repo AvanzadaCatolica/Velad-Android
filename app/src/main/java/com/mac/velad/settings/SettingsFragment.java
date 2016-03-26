@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mac.velad.R;
+import com.mac.velad.SplashActivity;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.general.ItemClickSupport;
 import com.mac.velad.general.VerticalSpaceItemDecoration;
@@ -81,8 +82,6 @@ public class SettingsFragment extends Fragment {
 
         Setting profile = new Setting(getString(R.string.settings_profile_title), Setting.SettingType.SETTING_TYPE_NORMAL);
         dataSet.add(profile);
-        Setting security = new Setting(getString(R.string.settings_security_title), Setting.SettingType.SETTING_TYPE_NORMAL);
-        dataSet.add(security);
         Setting cheer = new Setting(getString(R.string.settings_cheer_title), Setting.SettingType.SETTING_TYPE_NORMAL);
         dataSet.add(cheer);
 
@@ -124,6 +123,7 @@ public class SettingsFragment extends Fragment {
                 switch (position) {
                     case 0: {
                         Intent intent = new Intent(getContext(), ProfileActivity.class);
+                        intent.putExtra(SplashActivity.FIRST_LAUNCH, false);
                         startActivity(intent);
                         break;
                     }

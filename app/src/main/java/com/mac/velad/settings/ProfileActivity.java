@@ -1,7 +1,8 @@
 package com.mac.velad.settings;
 
-import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -9,7 +10,9 @@ import android.view.MenuItem;
 import com.github.dkharrat.nexusdialog.FormWithAppCompatActivity;
 import com.github.dkharrat.nexusdialog.controllers.EditTextController;
 import com.github.dkharrat.nexusdialog.controllers.FormSectionController;
+import com.mac.velad.MainActivity;
 import com.mac.velad.R;
+import com.mac.velad.SplashActivity;
 
 import java.util.UUID;
 
@@ -40,14 +43,12 @@ public class ProfileActivity extends FormWithAppCompatActivity {
             getModel().setValue(PROFILE_CIRCLE, profile.getCircle());
             getModel().setValue(PROFILE_GROUP, profile.getGroup());
         }
-
-        setTitle(getString(R.string.profile_activity_title));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        boolean later = sharedPref.getBoolean(SHARED_PREFERENCES_PROFILE_LATER, true);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean later = sharedPreferences.getBoolean(SHARED_PREFERENCES_PROFILE_LATER, true);
 
         MenuInflater inflater = getMenuInflater();
         if (later) {
@@ -96,10 +97,15 @@ public class ProfileActivity extends FormWithAppCompatActivity {
     }
 
     private void later() {
-        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(SHARED_PREFERENCES_PROFILE_LATER, false);
         editor.commit();
+
+        if (getIntent().getExtras().getBoolean(SplashActivity.FIRST_LAUNCH)) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
         finish();
     }
 
