@@ -53,4 +53,6 @@
     <string name="settings_licenses_title">Licencias</string>
     <string name="settings_open_source_title">Código abierto</string>
     <string name="settings_version_title">Versión</string>
+
+    <string name="settings_monday_details">Al estar seleccionado, todos los intervalos semanales empezarán el día Lunes.\n\nCaso contrario, se usará la configuración de región del dispositivo.</string>
 </resources>

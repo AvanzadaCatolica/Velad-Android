@@ -13,10 +13,21 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"/>
+    <ImageButton
+        android:id="@+id/button_info"
+        android:src="@drawable/ic_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:padding="5dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:foreground="?attr/selectableItemBackground"/>
     <Switch
         android:id="@+id/switch_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@id/button_info"
+        android:layout_alignWithParentIfMissing="true"
         android:layout_centerVertical="true"/>
 </RelativeLayout>

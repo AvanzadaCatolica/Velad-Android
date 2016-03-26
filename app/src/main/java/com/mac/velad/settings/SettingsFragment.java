@@ -87,6 +87,7 @@ public class SettingsFragment extends Fragment {
         dataSet.add(cheer);
 
         Setting monday = new BooleanSetting(getString(R.string.settings_monday_title), Setting.SettingType.SETTING_TYPE_BOOLEAN, false);
+        monday.setDetails(getString(R.string.settings_monday_details));
         dataSet.add(monday);
 
         Setting restore = new ActionSetting(getString(R.string.settings_restore_title), Setting.SettingType.SETTING_TYPE_ACTION);
@@ -109,7 +110,7 @@ public class SettingsFragment extends Fragment {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        adapter = new SettingAdapter(getContext(), dataSet);
+        adapter = new SettingAdapter(getContext(), getChildFragmentManager(), dataSet);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 

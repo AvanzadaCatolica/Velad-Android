@@ -11,6 +11,7 @@ public class Setting {
 
     private String title;
     private SettingType settingType;
+    private String details;
 
     public Setting(String title, SettingType settingType) {
         this.title = title;
@@ -20,8 +21,17 @@ public class Setting {
     public String getTitle() {
         return title;
     }
+
     public SettingType getSettingType() {
         return settingType;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 }
 

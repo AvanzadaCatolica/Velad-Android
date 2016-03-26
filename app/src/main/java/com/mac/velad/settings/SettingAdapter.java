@@ -1,10 +1,12 @@
 package com.mac.velad.settings;
 
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -15,14 +17,16 @@ import java.util.List;
 /**
  * Created by ruenzuo on 25/03/16.
  */
-public class SettingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SettingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnSettingClickListener {
 
     private List<Setting> dataSet;
     private Context context;
+    private FragmentManager fragmentManager;
 
-    public SettingAdapter(Context context, List<Setting> dataSet) {
+    public SettingAdapter(Context context, FragmentManager fragmentManager, List<Setting> dataSet) {
         this.context = context;
         this.dataSet = dataSet;
+        this.fragmentManager = fragmentManager;
     }
 
     @Override
@@ -62,12 +66,15 @@ public class SettingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Setting setting = dataSet.get(position);
+        SettingViewHolder baseHolder = (SettingViewHolder) holder;
+        baseHolder.bind(setting, this);
+        baseHolder.textViewTitle.setText(setting.getTitle());
+        if (setting.getDetails() == null) {
+            baseHolder.infoButton.setVisibility(View.GONE);
+        } else {
+            baseHolder.infoButton.setVisibility(View.VISIBLE);
+        }
         switch (setting.getSettingType()) {
-            case SETTING_TYPE_NORMAL: {
-                SettingViewHolder viewHolder = (SettingViewHolder) holder;
-                viewHolder.textViewTitle.setText(setting.getTitle());
-                break;
-            }
             case SETTING_TYPE_ACTION: {
                 ActionSettingViewHolder viewHolder = (ActionSettingViewHolder) holder;
                 viewHolder.textViewTitle.setText(setting.getTitle());
@@ -75,13 +82,11 @@ public class SettingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             case SETTING_TYPE_BOOLEAN: {
                 BooleanSettingViewHolder viewHolder = (BooleanSettingViewHolder) holder;
-                viewHolder.textViewTitle.setText(setting.getTitle());
                 viewHolder.switchValue.setChecked(((BooleanSetting)setting).getValue());
                 break;
             }
             case SETTING_TYPE_INFO: {
                 InfoSettingViewHolder viewHolder = (InfoSettingViewHolder) holder;
-                viewHolder.textViewTitle.setText(setting.getTitle());
                 viewHolder.textViewInfo.setText(((InfoSetting) setting).getInfo());
                 break;
             }
@@ -93,12 +98,29 @@ public class SettingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return dataSet.size();
     }
 
+    @Override
+    public void onDetailsClick(Setting item) {
+        InfoDialogFragment dialogFragment = InfoDialogFragment.newInstance(item.getDetails());
+        dialogFragment.show(fragmentManager, InfoDialogFragment.class.toString());
+    }
+
     public static class SettingViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewTitle;
+        public ImageButton infoButton;
 
         public SettingViewHolder(View root) {
             super(root);
             this.textViewTitle = (TextView) root.findViewById(R.id.text_view_title);
+            this.infoButton = (ImageButton) root.findViewById(R.id.button_info);
+        }
+
+        public void bind(final Setting setting, final OnSettingClickListener listener) {
+            this.infoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onDetailsClick(setting);
+                }
+            });
         }
     }
 
