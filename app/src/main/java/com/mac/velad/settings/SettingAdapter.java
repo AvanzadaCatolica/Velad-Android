@@ -14,7 +14,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.mac.velad.R;
-import com.mac.velad.general.CalendarHelper;
 
 import java.util.List;
 
@@ -116,7 +115,7 @@ public class SettingAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(CalendarHelper.SHARED_PREFERENCES_START_MONDAY, item.getValue());
+        editor.putBoolean(item.getKey(), item.getValue());
         editor.apply();
     }
 

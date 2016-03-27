@@ -90,7 +90,7 @@ public class SettingsFragment extends Fragment {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
         boolean start = sharedPreferences.getBoolean(CalendarHelper.SHARED_PREFERENCES_START_MONDAY, false);
-        Setting monday = new BooleanSetting(getString(R.string.settings_monday_title), Setting.SettingType.SETTING_TYPE_BOOLEAN, start);
+        Setting monday = new BooleanSetting(getString(R.string.settings_monday_title), Setting.SettingType.SETTING_TYPE_BOOLEAN, start, CalendarHelper.SHARED_PREFERENCES_START_MONDAY);
         monday.setDetails(getString(R.string.settings_monday_details));
         dataSet.add(monday);
 

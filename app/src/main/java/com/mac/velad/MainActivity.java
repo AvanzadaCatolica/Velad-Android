@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.mac.velad.diary.DiaryFragment;
 import com.mac.velad.settings.SettingsFragment;
+import com.mac.velad.today.TodayFragment;
 
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;

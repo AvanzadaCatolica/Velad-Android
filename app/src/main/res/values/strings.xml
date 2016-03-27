@@ -43,6 +43,7 @@
     <string name="menu_item_filter_weekly_title">Por semana</string>
 
     <string name="date_interval_picker_return_weekly_title">Ir a la semana actual</string>
+    <string name="date_picker_return_today_title">Ir al día actual</string>
 
     <string name="settings_profile_title">Perfil</string>
     <string name="settings_security_title">Seguridad</string>
@@ -62,4 +63,14 @@
     <string name="profile_information_name_format">Nombre: %s\n</string>
     <string name="profile_information_circle_format">Círculo: %s\n</string>
     <string name="profile_information_group_format">Grupo: %s\n</string>
+    <string name="default_group_name">Puntos Básicos</string>
+
+    <string-array name="basic_points_seed">
+        <item>Oración</item>
+        <item>Eucaristía</item>
+        <item>Abnegación</item>
+        <item>Vigilancia</item>
+        <item>Amor a la Virgen</item>
+        <item>Conocimiento serio de la fe</item>
+    </string-array>
 </resources>

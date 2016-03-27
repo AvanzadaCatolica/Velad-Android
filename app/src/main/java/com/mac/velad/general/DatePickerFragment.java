@@ -14,34 +14,28 @@ import com.mac.velad.R;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateIntervalPickerFragment extends Fragment {
+public class DatePickerFragment extends Fragment {
 
-    private Date selectedStartDate;
-    private Date selectedEndDate;
-    private DateFormat dateFormatEnd = new DateFormat("dd 'de' MMMM");
-    private DateFormat dateFormatStart = new DateFormat("dd 'al' ");
+    private Date selectedDate;
+    private DateFormat dateFormat = new DateFormat("dd 'de' MMMM");
 
-    private DateIntervalPickerFragmentListener listener;
+    private DatePickerFragmentListener listener;
 
-    public DateIntervalPickerFragment() {
+    public DatePickerFragment() {
         // Required empty public constructor
     }
 
-    public static DateIntervalPickerFragment newInstance() {
-        DateIntervalPickerFragment fragment = new DateIntervalPickerFragment();
+    public static DatePickerFragment newInstance() {
+        DatePickerFragment fragment = new DatePickerFragment();
         return fragment;
     }
 
-    public Date getSelectedStartDate() {
-        return selectedStartDate;
-    }
-
-    public Date getSelectedEndDate() {
-        return selectedEndDate;
+    public Date getSelectedDate() {
+        return selectedDate;
     }
 
     public String getTitle() {
-        return dateFormatStart.format(selectedStartDate) + dateFormatEnd.format(selectedEndDate);
+        return dateFormat.format(selectedDate);
     }
 
     @Override
@@ -57,12 +51,7 @@ public class DateIntervalPickerFragment extends Fragment {
         calendar.clear(Calendar.SECOND);
         calendar.clear(Calendar.MILLISECOND);
 
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-        selectedStartDate = calendar.getTime();
-
-        calendar.add(Calendar.WEEK_OF_YEAR, 1);
-        calendar.add(Calendar.SECOND, -1);
-        selectedEndDate = calendar.getTime();
+        selectedDate = calendar.getTime();
     }
 
     @Override
@@ -101,7 +90,7 @@ public class DateIntervalPickerFragment extends Fragment {
     private void returnToToday() {
         setupSelectedDate();
         updateDisplayedText(getView());
-        listener.onPickDateInterval(this);
+        listener.onPickDate(this);
     }
 
     private void updateDisplayedText(View container) {
@@ -109,65 +98,61 @@ public class DateIntervalPickerFragment extends Fragment {
         textViewDate.setText(getTitle());
 
         TextView textViewReturn = (TextView) container.findViewById(R.id.text_view_return);
-        if (!isTodayInCurrentIntervalSelection()) {
+        if (!isCurrentSelectionToday()) {
             textViewReturn.setVisibility(View.VISIBLE);
-            textViewReturn.setText(getString(R.string.date_interval_picker_return_weekly_title));
+            textViewReturn.setText(getString(R.string.date_picker_return_today_title));
         } else {
             textViewReturn.setVisibility(View.GONE);
         }
     }
 
-    private boolean isTodayInCurrentIntervalSelection() {
-        Date today = new Date();
-        return selectedStartDate.before(today) && selectedEndDate.after(today);
+    private boolean isCurrentSelectionToday() {
+        Calendar calendarToday = CalendarHelper.getInstance(getContext());
+        Calendar calendarSelected = CalendarHelper.getInstance(getContext());
+        calendarSelected.setTime(selectedDate);
+        return calendarToday.get(Calendar.DAY_OF_MONTH) == calendarSelected.get(Calendar.DAY_OF_MONTH) &&
+                calendarToday.get(Calendar.MONTH) == calendarSelected.get(Calendar.MONTH) &&
+                calendarToday.get(Calendar.YEAR) == calendarSelected.get(Calendar.YEAR);
     }
 
     private void showNext() {
         Calendar calendar = CalendarHelper.getInstance(getContext());
-        calendar.setTime(selectedStartDate);
-        calendar.add(Calendar.WEEK_OF_YEAR, 1);
-        selectedStartDate = calendar.getTime();
+        calendar.setTime(selectedDate);
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        selectedDate = calendar.getTime();
 
-        calendar = CalendarHelper.getInstance(getContext());
-        calendar.setTime(selectedEndDate);
-        calendar.add(Calendar.WEEK_OF_YEAR, 1);
-        selectedEndDate = calendar.getTime();
 
         updateDisplayedText(getView());
-        listener.onPickDateInterval(this);
+        listener.onPickDate(this);
     }
 
     private void showPrevious() {
         Calendar calendar = CalendarHelper.getInstance(getContext());
-        calendar.setTime(selectedStartDate);
-        calendar.add(Calendar.WEEK_OF_YEAR, -1);
-        selectedStartDate = calendar.getTime();
+        calendar.setTime(selectedDate);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        selectedDate = calendar.getTime();
 
-        calendar = CalendarHelper.getInstance(getContext());
-        calendar.setTime(selectedEndDate);
-        calendar.add(Calendar.WEEK_OF_YEAR, -1);
-        selectedEndDate = calendar.getTime();
 
         updateDisplayedText(getView());
-        listener.onPickDateInterval(this);
+        listener.onPickDate(this);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         Fragment fragment = getParentFragment();
-        if (fragment instanceof DateIntervalPickerFragmentListener) {
-            listener = (DateIntervalPickerFragmentListener) fragment;
+        if (fragment instanceof DatePickerFragmentListener) {
+            listener = (DatePickerFragmentListener) fragment;
         } else {
             throw new RuntimeException(fragment.toString()
-                    + " must implement DateIntervalPickerFragmentListener");
+                    + " must implement DatePickerFragmentListener");
         }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        listener.onPickDateInterval(this);
+        listener.onPickDate(this);
     }
 
     @Override
@@ -176,7 +161,7 @@ public class DateIntervalPickerFragment extends Fragment {
         listener = null;
     }
 
-    public interface DateIntervalPickerFragmentListener {
-        void onPickDateInterval(DateIntervalPickerFragment fragment);
+    public interface DatePickerFragmentListener {
+        void onPickDate(DatePickerFragment fragment);
     }
 }
