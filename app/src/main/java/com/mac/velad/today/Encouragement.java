@@ -1,6 +1,10 @@
 package com.mac.velad.today;
 
+import android.content.Context;
+
+import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -11,7 +15,13 @@ public class Encouragement extends RealmObject {
     @PrimaryKey
     private String UUID;
     private boolean enabled;
-    private float percentage;
+    private int percentage;
+
+    public static Encouragement getEncouragement(Context context) {
+        Realm realm = Realm.getInstance(context);
+        RealmResults<Encouragement> result = realm.where(Encouragement.class).findAll();
+        return result.first();
+    }
 
     public String getUUID() {
         return UUID;
@@ -29,11 +39,12 @@ public class Encouragement extends RealmObject {
         this.enabled = enabled;
     }
 
-    public float getPercentage() {
+    public int getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(float percentage) {
+    public void setPercentage(int percentage) {
         this.percentage = percentage;
     }
+
 }

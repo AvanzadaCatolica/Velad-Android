@@ -32,6 +32,12 @@ public class Record extends RealmObject {
         return result;
     }
 
+    public static int getRecordsCount(Context context, Date date) {
+        Realm realm = Realm.getInstance(context);
+        RealmResults<Record> result = realm.where(Record.class).equalTo("date", date).findAll();
+        return result.size();
+    }
+
     public String getUUID() {
         return UUID;
     }

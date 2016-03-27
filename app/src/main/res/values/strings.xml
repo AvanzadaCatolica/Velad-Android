@@ -17,6 +17,7 @@
     <string name="menu_item_title_later">Ahora no</string>
     <string name="menu_item_title_register">Registrar</string>
     <string name="menu_item_title_delete">Borrar</string>
+    <string name="menu_item_title_deactivate">Desactivar</string>
 
     <string name="error_message_missing_field">Por favor, llene todos los campos</string>
     
@@ -66,6 +67,7 @@
     <string name="default_group_name">Puntos Básicos</string>
     <string name="dialog_note_hint">Agregar notas</string>
     <string name="week_email_report_header">Reporte semanal:\n\n</string>
+    <string name="encouragement_alert_text">Felicitaciones!\n\nEstás haciendo un trabajo excelente!\n\n\uD83C\uDF89 \uD83C\uDF8A \uD83C\uDF89 \uD83C\uDF8A \uD83C\uDF89 \uD83C\uDF8A</string>
 
     <string-array name="basic_points_seed">
         <item>Oración</item>
@@ -74,5 +76,18 @@
         <item>Vigilancia</item>
         <item>Amor a la Virgen</item>
         <item>Conocimiento serio de la fe</item>
+    </string-array>
+
+    <string-array name="encouragement_values">
+        <item>10%</item>
+        <item>20%</item>
+        <item>30%</item>
+        <item>40%</item>
+        <item>50%</item>
+        <item>60%</item>
+        <item>70%</item>
+        <item>80%</item>
+        <item>90%</item>
+        <item>100%</item>
     </string-array>
 </resources>

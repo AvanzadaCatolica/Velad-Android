@@ -16,6 +16,10 @@ public class InfoSetting extends Setting {
         this.info = info;
     }
 
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
     public String getInfo() {
         return info;
     }

@@ -18,6 +18,7 @@ import com.mac.velad.general.DateFormat;
 import com.mac.velad.general.DatePickerFragment;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.general.ItemClickSupport;
+import com.mac.velad.settings.InfoDialogFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -137,6 +138,45 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
         });
     }
 
+    private void showEncouragement() {
+        Encouragement encouragement = Encouragement.getEncouragement(getContext());
+        if (!encouragement.isEnabled()) {
+            return;
+        }
+
+        DatePickerFragment fragment = (DatePickerFragment) getChildFragmentManager().findFragmentByTag(DatePickerFragment.class.toString());
+        int recordsCount = Record.getRecordsCount(getContext(), fragment.getSelectedDate());
+
+        int totalCount = 0;
+        for (Object object : dataSet) {
+            if (object instanceof TodayViewModel) {
+                totalCount++;
+            }
+        }
+
+        if ((float)recordsCount / (float)totalCount < encouragement.getPercentage() / 100.0f) {
+            return;
+        }
+
+        ShownDate shownDate = ShownDate.getShowDate(getContext(), fragment.getSelectedDate());
+        if (shownDate != null) {
+            return;
+        }
+
+        Realm realm = Realm.getInstance(getContext());
+        realm.beginTransaction();
+
+        shownDate = new ShownDate();
+        shownDate.setUUID(UUID.randomUUID().toString());
+        shownDate.setDate(fragment.getSelectedDate());
+        realm.copyToRealm(shownDate);
+
+        realm.commitTransaction();
+
+        InfoDialogFragment dialogFragment = InfoDialogFragment.newInstance(getString(R.string.encouragement_alert_text));
+        dialogFragment.show(getChildFragmentManager(), InfoDialogFragment.class.toString());
+    }
+
     private void showNoteDialog(int position) {
         TodayViewModel viewModel = (TodayViewModel) dataSet.get(position);
         String notes = "";
@@ -158,6 +198,8 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
         Realm realm = Realm.getInstance(getContext());
         realm.beginTransaction();
 
+        boolean added = false;
+
         if (viewModel.getRecord() != null) {
             if (notes != null) {
                 Record record = viewModel.getRecord();
@@ -175,9 +217,14 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
             record.setNotes(notes);
             realm.copyToRealm(record);
             viewModel.setRecord(record);
+            added = true;
         }
 
         realm.commitTransaction();
+
+        if (added) {
+            showEncouragement();
+        }
     }
 
     @Override

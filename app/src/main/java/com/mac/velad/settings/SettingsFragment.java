@@ -22,12 +22,16 @@ import com.mac.velad.general.CalendarHelper;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.general.ItemClickSupport;
 import com.mac.velad.general.VerticalSpaceItemDecoration;
+import com.mac.velad.today.Encouragement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SettingsFragment extends Fragment {
+import io.realm.Realm;
+import io.realm.RealmResults;
+
+public class SettingsFragment extends Fragment implements EncouragementDialogFragment.EncouragementDialogFragmentListener{
 
     private RecyclerView recyclerView;
     private SettingAdapter adapter;
@@ -74,6 +78,16 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    private String getEncouragementStatus(Encouragement encouragement) {
+        String encouragementStatus;
+        if (encouragement.isEnabled()) {
+            encouragementStatus = encouragement.getPercentage() + "%";
+        } else {
+            encouragementStatus = "Desactivado";
+        }
+        return encouragementStatus;
+    }
+
     private void setupDataSet() {
         String versionName;
         try {
@@ -85,7 +99,7 @@ public class SettingsFragment extends Fragment {
 
         Setting profile = new Setting(getString(R.string.settings_profile_title), Setting.SettingType.SETTING_TYPE_NORMAL);
         dataSet.add(profile);
-        Setting cheer = new Setting(getString(R.string.settings_cheer_title), Setting.SettingType.SETTING_TYPE_NORMAL);
+        Setting cheer = new InfoSetting(getString(R.string.settings_cheer_title), Setting.SettingType.SETTING_TYPE_INFO, getEncouragementStatus(Encouragement.getEncouragement(getContext())));
         dataSet.add(cheer);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
@@ -132,9 +146,46 @@ public class SettingsFragment extends Fragment {
                         startActivity(intent);
                         break;
                     }
+                    case 1: {
+                        Encouragement encouragement = Encouragement.getEncouragement(getContext());
+                        EncouragementDialogFragment dialogFragment = EncouragementDialogFragment.newInstance(encouragement.isEnabled() ? encouragement.getPercentage() : null);
+                        dialogFragment.show(getChildFragmentManager(), EncouragementDialogFragment.class.toString());
+                    }
                 }
             }
         });
     }
 
+    @Override
+    public void onSave(int value) {
+        Realm realm = Realm.getInstance(getContext());
+        realm.beginTransaction();
+
+        Encouragement encouragement = Encouragement.getEncouragement(getContext());
+        encouragement.setPercentage(value);
+        encouragement.setEnabled(true);
+        realm.copyToRealm(encouragement);
+
+        realm.commitTransaction();
+
+        InfoSetting cheer = (InfoSetting) dataSet.get(1);
+        cheer.setInfo(getEncouragementStatus(encouragement));
+        adapter.notifyItemChanged(1);
+    }
+
+    @Override
+    public void onDeactivate() {
+        Realm realm = Realm.getInstance(getContext());
+        realm.beginTransaction();
+
+        Encouragement encouragement = Encouragement.getEncouragement(getContext());
+        encouragement.setEnabled(false);
+        realm.copyToRealm(encouragement);
+
+        realm.commitTransaction();
+
+        InfoSetting cheer = (InfoSetting) dataSet.get(1);
+        cheer.setInfo(getEncouragementStatus(encouragement));
+        adapter.notifyItemChanged(1);
+    }
 }

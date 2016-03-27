@@ -72,7 +72,7 @@ public class MigrationController {
         Encouragement encouragement = new Encouragement();
         encouragement.setUUID(UUID.randomUUID().toString());
         encouragement.setEnabled(true);
-        encouragement.setPercentage(0.5f);
+        encouragement.setPercentage(50);
         realm.copyToRealm(encouragement);
 
         realm.commitTransaction();
