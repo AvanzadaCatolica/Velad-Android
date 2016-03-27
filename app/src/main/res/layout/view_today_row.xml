@@ -3,7 +3,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
     android:focusable="true"
     android:clickable="true"
     android:background="?attr/selectableItemBackground">
@@ -12,18 +11,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentLeft="true"
+        android:padding="16dp"/>
     <ImageView
         android:src="@drawable/ic_checkmark"
         android:id="@+id/image_view_checkmark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:padding="16dp"/>
     <ImageButton
         android:id="@+id/image_button_info"
+        android:src="@drawable/ic_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:foreground="?attr/selectableItemBackground"
+        android:padding="16dp"/>
 </RelativeLayout>

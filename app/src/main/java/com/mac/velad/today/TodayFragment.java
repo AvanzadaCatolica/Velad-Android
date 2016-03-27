@@ -29,7 +29,8 @@ import java.util.UUID;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class TodayFragment extends Fragment implements DatePickerFragment.DatePickerFragmentListener {
+
+public class TodayFragment extends Fragment implements DatePickerFragment.DatePickerFragmentListener, NoteDialogFragment.NoteDialogFragmentListener, OnNoteClickListener {
 
     public TodayFragment() {
         // Required empty public constructor
@@ -125,26 +126,37 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
-        adapter = new TodayAdapter(getContext(), dataSet);
+        adapter = new TodayAdapter(getContext(), dataSet, this);
         recyclerView.setAdapter(adapter);
 
         ItemClickSupport support = ItemClickSupport.addTo(recyclerView);
         support.setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-                toogleRecord(position);
+                toogleRecord(position, null);
                 adapter.notifyItemChanged(position);
             }
         });
         support.setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClicked(RecyclerView recyclerView, int position, View view) {
+                showNoteDialog(position);
                 return true;
             }
         });
     }
 
-    private void toogleRecord(int position) {
+    private void showNoteDialog(int position) {
+        TodayViewModel viewModel = (TodayViewModel) dataSet.get(position);
+        String notes = "";
+        if (viewModel.getRecord() != null && viewModel.getRecord().getNotes() != null) {
+            notes = viewModel.getRecord().getNotes();
+        }
+        NoteDialogFragment dialogFragment = NoteDialogFragment.newInstance(notes, position);
+        dialogFragment.show(getChildFragmentManager(), NoteDialogFragment.class.toString());
+    }
+
+    private void toogleRecord(int position, String notes) {
         Object objectAtIndex = dataSet.get(position);
         if (objectAtIndex instanceof Group) {
             return;
@@ -156,13 +168,20 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
         realm.beginTransaction();
 
         if (viewModel.getRecord() != null) {
-            viewModel.getRecord().removeFromRealm();
-            viewModel.setRecord(null);
+            if (notes != null) {
+                Record record = viewModel.getRecord();
+                record.setNotes(notes);
+                realm.copyToRealm(record);
+            } else {
+                viewModel.getRecord().removeFromRealm();
+                viewModel.setRecord(null);
+            }
         } else {
             Record record = realm.createObject(Record.class);
             record.setUUID(UUID.randomUUID().toString());
             record.setDate(fragment.getSelectedDate());
             record.setBasicPoint(viewModel.getBasicPoint());
+            record.setNotes(notes);
             realm.copyToRealm(record);
             viewModel.setRecord(record);
         }
@@ -198,5 +217,17 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
         setupDataSet();
         adapter.setDataSet(dataSet);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onInputNote(String note, int position) {
+        toogleRecord(position, note);
+        adapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void onNoteClick(TodayViewModel viewModel) {
+        int position = dataSet.indexOf(viewModel);
+        showNoteDialog(position);
     }
 }

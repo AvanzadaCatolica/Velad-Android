@@ -24,10 +24,12 @@ public class TodayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private List dataSet;
     private Context context;
+    private OnNoteClickListener noteClickListener;
 
-    public TodayAdapter(Context context, List dataSet) {
+    public TodayAdapter(Context context, List dataSet, OnNoteClickListener listener) {
         this.context = context;
         this.dataSet = dataSet;
+        this.noteClickListener = listener;
     }
 
     public void setDataSet(List dataSet) {
@@ -71,6 +73,7 @@ public class TodayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         } else {
             TodayViewModel viewModel = (TodayViewModel) objectAtPosition;
             RowViewHolder rowViewHolder = (RowViewHolder) holder;
+            rowViewHolder.bind(viewModel, noteClickListener);
             rowViewHolder.textViewTitle.setText(viewModel.getBasicPoint().getName());
             if (viewModel.getRecord() != null) {
                 if (viewModel.getRecord().getNotes() != null) {
@@ -111,6 +114,15 @@ public class TodayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             this.textViewTitle = (TextView) root.findViewById(R.id.text_view_title);
             this.imageViewCheckmark = (ImageView) root.findViewById(R.id.image_view_checkmark);
             this.imageButtonInfo = (ImageButton) root.findViewById(R.id.image_button_info);
+        }
+
+        public void bind(final TodayViewModel todayViewModel, final OnNoteClickListener listener) {
+            this.imageButtonInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onNoteClick(todayViewModel);
+                }
+            });
         }
     }
 
