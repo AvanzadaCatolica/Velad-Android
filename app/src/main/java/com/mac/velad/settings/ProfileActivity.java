@@ -43,6 +43,10 @@ public class ProfileActivity extends FormWithAppCompatActivity {
             getModel().setValue(PROFILE_CIRCLE, profile.getCircle());
             getModel().setValue(PROFILE_GROUP, profile.getGroup());
         }
+
+        if (!getIntent().getExtras().getBoolean(SplashActivity.FIRST_LAUNCH)) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -62,6 +66,9 @@ public class ProfileActivity extends FormWithAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
             case R.id.menu_item_save:
                 saveProfile();
                 return true;

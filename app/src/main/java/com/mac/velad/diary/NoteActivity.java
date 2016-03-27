@@ -45,6 +45,8 @@ public class NoteActivity extends FormWithAppCompatActivity {
             getModel().setValue(NOTE_DATE, new Date());
             getModel().setValue(NOTE_STATE, NoteState.REGULAR);
         }
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -57,6 +59,9 @@ public class NoteActivity extends FormWithAppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
             case R.id.menu_item_save:
                 saveNote();
                 return true;
