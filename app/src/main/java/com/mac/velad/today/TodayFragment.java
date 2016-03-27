@@ -74,21 +74,12 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
         }
     }
 
-    private Date coldStartDate() {
-        Calendar calendar = CalendarHelper.getInstance(getContext());
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.clear(Calendar.MINUTE);
-        calendar.clear(Calendar.SECOND);
-        calendar.clear(Calendar.MILLISECOND);
-        return calendar.getTime();
-    }
-
     private void setupDataSet() {
         dataSet.clear();
         DatePickerFragment fragment = (DatePickerFragment) getChildFragmentManager().findFragmentByTag(DatePickerFragment.class.toString());
         Date selectedDate;
         if (fragment == null) {
-            selectedDate = coldStartDate();
+            selectedDate = CalendarHelper.coldCurrentDate(getContext());
         } else {
             selectedDate = fragment.getSelectedDate();
         }

@@ -54,8 +54,8 @@ public class TodayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 return viewHolder;
             }
             case TODAY_VIEW_TYPE_HEADER: {
-                View view = LayoutInflater.from(context).inflate(R.layout.view_today_header, parent, false);
-                HeaderViewHolder viewHolder = new HeaderViewHolder(view);
+                View view = LayoutInflater.from(context).inflate(R.layout.view_group_header, parent, false);
+                GroupHeaderViewHolder viewHolder = new GroupHeaderViewHolder(view);
                 return viewHolder;
             }
             default:
@@ -68,7 +68,7 @@ public class TodayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         Object objectAtPosition = dataSet.get(position);
         if (objectAtPosition instanceof Group) {
             Group group = (Group) objectAtPosition;
-            HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
+            GroupHeaderViewHolder headerViewHolder = (GroupHeaderViewHolder) holder;
             headerViewHolder.textViewTitle.setText(group.getName());
         } else {
             TodayViewModel viewModel = (TodayViewModel) objectAtPosition;
@@ -93,15 +93,6 @@ public class TodayAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemCount() {
         return dataSet.size();
-    }
-
-    public static class HeaderViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewTitle;
-
-        public HeaderViewHolder(View root) {
-            super(root);
-            this.textViewTitle = (TextView) root.findViewById(R.id.text_view_title);
-        }
     }
 
     public static class RowViewHolder extends RecyclerView.ViewHolder {

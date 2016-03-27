@@ -26,6 +26,12 @@ public class Record extends RealmObject {
         return result.size() > 0 ? result.first() : null;
     }
 
+    public static RealmResults<Record> getRecords(Context context, BasicPoint basicPoint, Date startDate, Date endDate) {
+        Realm realm = Realm.getInstance(context);
+        RealmResults<Record> result = realm.where(Record.class).between("date", startDate, endDate).equalTo("basicPoint.UUID", basicPoint.getUUID()).findAll();
+        return result;
+    }
+
     public String getUUID() {
         return UUID;
     }

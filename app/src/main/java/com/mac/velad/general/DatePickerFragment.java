@@ -45,13 +45,7 @@ public class DatePickerFragment extends Fragment {
     }
 
     private void setupSelectedDate() {
-        Calendar calendar = CalendarHelper.getInstance(getContext());
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.clear(Calendar.MINUTE);
-        calendar.clear(Calendar.SECOND);
-        calendar.clear(Calendar.MILLISECOND);
-
-        selectedDate = calendar.getTime();
+        selectedDate = CalendarHelper.coldCurrentDate(getContext());
     }
 
     @Override

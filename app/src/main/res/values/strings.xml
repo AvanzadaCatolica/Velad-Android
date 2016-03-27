@@ -65,6 +65,7 @@
     <string name="profile_information_group_format">Grupo: %s\n</string>
     <string name="default_group_name">Puntos Básicos</string>
     <string name="dialog_note_hint">Agregar notas</string>
+    <string name="week_email_report_header">Reporte semanal:\n\n</string>
 
     <string-array name="basic_points_seed">
         <item>Oración</item>

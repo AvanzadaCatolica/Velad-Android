@@ -51,18 +51,8 @@ public class DateIntervalPickerFragment extends Fragment {
     }
 
     private void setupSelectedDate() {
-        Calendar calendar = CalendarHelper.getInstance(getContext());
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.clear(Calendar.MINUTE);
-        calendar.clear(Calendar.SECOND);
-        calendar.clear(Calendar.MILLISECOND);
-
-        calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-        selectedStartDate = calendar.getTime();
-
-        calendar.add(Calendar.WEEK_OF_YEAR, 1);
-        calendar.add(Calendar.SECOND, -1);
-        selectedEndDate = calendar.getTime();
+        selectedStartDate = CalendarHelper.coldCurrentStartWeekDate(getContext());
+        selectedEndDate = CalendarHelper.coldCurrentEndWeekDate(getContext());
     }
 
     @Override
