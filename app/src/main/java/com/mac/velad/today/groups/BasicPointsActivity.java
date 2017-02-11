@@ -1,6 +1,5 @@
 package com.mac.velad.today.groups;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -18,45 +17,57 @@ import com.bignerdranch.android.multiselector.MultiSelector;
 import com.mac.velad.R;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.general.ItemClickSupport;
+import com.mac.velad.today.BasicPoint;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
-public class GroupsActivity extends AppCompatActivity implements GroupDialogFragment.GroupDialogFragmentListener {
+public class BasicPointsActivity extends AppCompatActivity {
 
-    private static final int MODIFY_GROUP_REQUEST = 9999;
-    private RealmResults<Group> dataSet;
+    public final static String GROUP_UUID_EXTRA = "GROUP_UUID";
+
+    private Group group;
     private RecyclerView recyclerView;
-    private GroupsAdapter adapter;
-    private ActionMode currentActionMode;
     private MultiSelector multiSelector = new MultiSelector();
+    private BasicPointsAdapter adapter;
+    private ActionMode currentActionMode;
     private LinearLayout contentEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_groups);
+        setContentView(R.layout.activity_basic_points);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        dataSet = Group.getAll(this);
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            group = Group.getGroup(this, bundle.getString(GROUP_UUID_EXTRA));
+        } else {
+            throw new IllegalStateException("Group UUID not set");
+        }
         setupRecyclerView();
         setupFloatingButton();
         setupEmptyView();
         updateContentEmpty();
     }
 
-    private void setupEmptyView() {
-        contentEmpty = (LinearLayout) findViewById(R.id.content_empty);
+    @Override
+    public void onBackPressed() {
+        finishActivity();
+    }
+
+    private void finishActivity() {
+        Intent intent = new Intent();
+        intent.putExtra(GROUP_UUID_EXTRA, group.getUUID());
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void updateContentEmpty() {
-        if (dataSet.size() > 0) {
+        if (group.getBasicPoints().size() > 0) {
             recyclerView.setVisibility(View.VISIBLE);
             contentEmpty.setVisibility(View.GONE);
         } else {
@@ -65,19 +76,22 @@ public class GroupsActivity extends AppCompatActivity implements GroupDialogFrag
         }
     }
 
+    private void setupEmptyView() {
+        contentEmpty = (LinearLayout) findViewById(R.id.content_empty);
+    }
+
     private void setupFloatingButton() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNewGroupDialog();
+                showNewBasicPoint();
             }
         });
     }
 
-    private void showNewGroupDialog() {
-        GroupDialogFragment dialogFragment = GroupDialogFragment.newInstance();
-        dialogFragment.show(getSupportFragmentManager(), GroupDialogFragment.class.toString());
+    private void showNewBasicPoint() {
+
     }
 
     private void setupRecyclerView() {
@@ -87,18 +101,18 @@ public class GroupsActivity extends AppCompatActivity implements GroupDialogFrag
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
 
-        adapter = new GroupsAdapter(this, dataSet, multiSelector);
+        adapter = new BasicPointsAdapter(this, group.getBasicPoints(), multiSelector);
         recyclerView.setAdapter(adapter);
 
         ItemClickSupport support = ItemClickSupport.addTo(recyclerView);
         support.setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View view) {
-                GroupsAdapter.ViewHolder holder = (GroupsAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+                BasicPointsAdapter.ViewHolder holder = (BasicPointsAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
                 if (multiSelector.tapSelection(holder)) {
                     updateActionMode();
                 } else {
-                    openGroup(position);
+                    openBasicPoint(position);
                 }
             }
         });
@@ -129,7 +143,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupDialogFrag
                     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.menu_item_delete:
-                                deleteGroups(multiSelector.getSelectedPositions());
+                                deleteBasicPoints(multiSelector.getSelectedPositions());
                                 currentActionMode.finish();
                                 updateActivity();
                                 return true;
@@ -147,7 +161,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupDialogFrag
                         fab.show();
                     }
                 });
-                GroupsAdapter.ViewHolder holder = (GroupsAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+                BasicPointsAdapter.ViewHolder holder = (BasicPointsAdapter.ViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
                 multiSelector.setSelected(holder, true);
                 updateActionMode();
                 return true;
@@ -155,46 +169,41 @@ public class GroupsActivity extends AppCompatActivity implements GroupDialogFrag
         });
     }
 
-    private void openGroup(int position) {
-        Group group = dataSet.get(position);
-        Intent intent = new Intent(this, BasicPointsActivity.class);
-        intent.putExtra(BasicPointsActivity.GROUP_UUID_EXTRA, group.getUUID());
-        startActivityForResult(intent, MODIFY_GROUP_REQUEST);
-    }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case MODIFY_GROUP_REQUEST:
-                handleModifyGroup(resultCode, data);
-                return;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finishActivity();
+                return true;
             default:
-                super.onActivityResult(requestCode, resultCode, data);
+                return super.onOptionsItemSelected(item);
         }
     }
 
-    private void handleModifyGroup(int resultCode, Intent data) {
-        if (resultCode != Activity.RESULT_OK) {
-            return;
+    private void updateActivity() {
+        adapter.notifyDataSetChanged();
+        updateContentEmpty();
+    }
+
+    private void deleteBasicPoints(List<Integer> positions) {
+        Realm realm = Realm.getInstance(this);
+        realm.beginTransaction();
+
+        List<BasicPoint> basicPointsToDelete = new ArrayList<>();
+        for (Integer position : positions) {
+            BasicPoint basicPoint = group.getBasicPoints().get(position);
+            basicPointsToDelete.add(basicPoint);
+        }
+        for (BasicPoint basicPoint: basicPointsToDelete) {
+            group.getBasicPoints().remove(basicPoint);
+            basicPoint.removeFromRealm();
         }
 
-        if (data != null) {
-            String UUID = data.getExtras().getString(BasicPointsActivity.GROUP_UUID_EXTRA);
-            if (UUID != null) {
-                int position = -1;
-                // indexOf is not supported on RealmResults
-                for (int i = 0; i < dataSet.size(); i++) {
-                    Group group = dataSet.get(i);
-                    if (group.getUUID().equalsIgnoreCase(UUID)) {
-                        position = i;
-                        break;
-                    }
-                }
-                if (position != -1) {
-                    adapter.notifyItemChanged(position);
-                }
-            }
-        }
+        realm.commitTransaction();
+    }
+
+    private void openBasicPoint(int position) {
+
     }
 
     private void updateActionMode() {
@@ -207,53 +216,5 @@ public class GroupsActivity extends AppCompatActivity implements GroupDialogFrag
         } else {
             currentActionMode.setTitle(selected + " " + getString(R.string.action_mode_delete_title));
         }
-    }
-
-    private void deleteGroups(List<Integer> positions) {
-        Realm realm = Realm.getInstance(this);
-        realm.beginTransaction();
-
-        List<Group> groupsToDelete = new ArrayList<>();
-        for (Integer position : positions) {
-            Group group = dataSet.get(position);
-            groupsToDelete.add(group);
-        }
-        for (Group group: groupsToDelete) {
-            group.removeFromRealm();
-        }
-
-        realm.commitTransaction();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onInputGroup(String name) {
-        Realm realm = Realm.getInstance(this);
-        realm.beginTransaction();
-
-        Group group = realm.createObject(Group.class);
-        group.setUUID(UUID.randomUUID().toString());
-        group.setName(name);
-        group.setCreatedAt(new Date());
-        realm.copyToRealm(group);
-
-        realm.commitTransaction();
-
-        updateActivity();
-    }
-
-    private void updateActivity() {
-        adapter.notifyDataSetChanged();
-        updateContentEmpty();
     }
 }

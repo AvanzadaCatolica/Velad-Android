@@ -31,6 +31,12 @@ public class Group extends RealmObject {
         return result;
     }
 
+    public static Group getGroup(Context context, String UUID) {
+        Realm realm = Realm.getInstance(context);
+        RealmResults<Group> result = realm.where(Group.class).equalTo("UUID", UUID).findAll();
+        return result.first();
+    }
+
     public String getUUID() {
         return UUID;
     }
