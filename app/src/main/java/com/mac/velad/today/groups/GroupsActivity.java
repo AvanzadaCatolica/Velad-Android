@@ -10,6 +10,7 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.bignerdranch.android.multiselector.MultiSelector;
 import com.mac.velad.R;
@@ -31,6 +32,7 @@ public class GroupsActivity extends AppCompatActivity implements OnGroupClickLis
     private GroupsAdapter adapter;
     private ActionMode currentActionMode;
     private MultiSelector multiSelector = new MultiSelector();
+    private LinearLayout contentEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,22 @@ public class GroupsActivity extends AppCompatActivity implements OnGroupClickLis
         dataSet = Group.getAll(this);
         setupRecyclerView();
         setupFloatingButton();
+        setupEmptyView();
+        updateContentEmpty();
+    }
+
+    private void setupEmptyView() {
+        contentEmpty = (LinearLayout) findViewById(R.id.content_empty);
+    }
+
+    private void updateContentEmpty() {
+        if (dataSet.size() > 0) {
+            recyclerView.setVisibility(View.VISIBLE);
+            contentEmpty.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            contentEmpty.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setupFloatingButton() {
@@ -110,7 +128,7 @@ public class GroupsActivity extends AppCompatActivity implements OnGroupClickLis
                             case R.id.menu_item_delete:
                                 deleteGroups(multiSelector.getSelectedPositions());
                                 currentActionMode.finish();
-                                adapter.notifyDataSetChanged();
+                                updateActivity();
                                 return true;
                             default:
                                 return true;
@@ -200,5 +218,6 @@ public class GroupsActivity extends AppCompatActivity implements OnGroupClickLis
 
     private void updateActivity() {
         adapter.notifyDataSetChanged();
+        updateContentEmpty();
     }
 }
