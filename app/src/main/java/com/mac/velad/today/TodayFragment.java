@@ -1,5 +1,6 @@
 package com.mac.velad.today;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -19,10 +20,10 @@ import com.mac.velad.general.DatePickerFragment;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.general.ItemClickSupport;
 import com.mac.velad.settings.InfoDialogFragment;
+import com.mac.velad.today.groups.Group;
+import com.mac.velad.today.groups.GroupsActivity;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -245,9 +246,14 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showGroupsActivity();
             }
         });
+    }
+
+    private void showGroupsActivity() {
+        Intent intent = new Intent(getContext(), GroupsActivity.class);
+        startActivity(intent);
     }
 
     @Override

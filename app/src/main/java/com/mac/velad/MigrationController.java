@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.mac.velad.today.BasicPoint;
 import com.mac.velad.today.Encouragement;
-import com.mac.velad.today.Group;
+import com.mac.velad.today.groups.Group;
 import com.mac.velad.today.WeekDay;
 
 import java.text.DateFormatSymbols;

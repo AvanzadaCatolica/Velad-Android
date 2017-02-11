@@ -1,6 +1,8 @@
-package com.mac.velad.today;
+package com.mac.velad.today.groups;
 
 import android.content.Context;
+
+import com.mac.velad.today.BasicPoint;
 
 import java.util.Date;
 

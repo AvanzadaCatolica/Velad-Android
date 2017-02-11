@@ -19,7 +19,7 @@ import com.mac.velad.general.DateIntervalPickerFragment;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.settings.Profile;
 import com.mac.velad.today.BasicPoint;
-import com.mac.velad.today.Group;
+import com.mac.velad.today.groups.Group;
 import com.mac.velad.today.Record;
 
 import java.util.ArrayList;

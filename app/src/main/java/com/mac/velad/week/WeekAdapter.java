@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mac.velad.R;
-import com.mac.velad.today.Group;
+import com.mac.velad.today.groups.Group;
 import com.mac.velad.today.GroupHeaderViewHolder;
 
 import java.util.List;

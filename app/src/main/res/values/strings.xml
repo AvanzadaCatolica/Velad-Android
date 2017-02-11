@@ -20,7 +20,7 @@
     <string name="menu_item_title_deactivate">Desactivar</string>
 
     <string name="error_message_missing_field">Por favor, llene todos los campos</string>
-    
+
     <string name="diary_confess_confirmation_text">Registrar confesión?</string>
     <string name="diary_confess_confirmation_action">Registrar</string>
 
@@ -30,6 +30,8 @@
     <string name="note_form_field_note">Nota</string>
     <string name="note_form_field_date">Fecha</string>
     <string name="note_form_field_type">Tipo</string>
+
+    <string name="groups_activity_title">Grupos</string>
 
     <string name="profile_activity_title">Perfil</string>
     <string name="profile_form_field_name">Nombre</string>
