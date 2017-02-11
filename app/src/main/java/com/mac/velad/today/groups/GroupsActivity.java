@@ -18,6 +18,7 @@ import com.bignerdranch.android.multiselector.MultiSelector;
 import com.mac.velad.R;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.general.ItemClickSupport;
+import com.mac.velad.today.groups.basicpoints.BasicPointsActivity;
 
 import java.util.ArrayList;
 import java.util.Date;

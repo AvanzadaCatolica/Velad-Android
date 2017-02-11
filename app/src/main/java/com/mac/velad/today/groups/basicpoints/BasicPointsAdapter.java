@@ -1,4 +1,4 @@
-package com.mac.velad.today.groups;
+package com.mac.velad.today.groups.basicpoints;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;

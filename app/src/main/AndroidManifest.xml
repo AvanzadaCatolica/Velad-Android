@@ -33,7 +33,7 @@
             android:label="@string/groups_activity_title"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".today.groups.BasicPointsActivity"
+            android:name=".today.groups.basicpoints.BasicPointsActivity"
             android:label="@string/group_activity_title"
             android:theme="@style/AppTheme.NoActionBar" />
 

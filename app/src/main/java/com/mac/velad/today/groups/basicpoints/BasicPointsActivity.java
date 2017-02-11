@@ -1,4 +1,4 @@
-package com.mac.velad.today.groups;
+package com.mac.velad.today.groups.basicpoints;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +18,7 @@ import com.mac.velad.R;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.general.ItemClickSupport;
 import com.mac.velad.today.BasicPoint;
+import com.mac.velad.today.groups.Group;
 
 import java.util.ArrayList;
 import java.util.List;
