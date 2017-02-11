@@ -32,6 +32,8 @@
     <string name="note_form_field_type">Tipo</string>
 
     <string name="groups_activity_title">Grupos</string>
+    <string name="groups_row_info_sing">1 punto</string>
+    <string name="groups_row_info_plur">%d punto</string>
 
     <string name="profile_activity_title">Perfil</string>
     <string name="profile_form_field_name">Nombre</string>
@@ -70,6 +72,7 @@
     <string name="dialog_note_hint">Agregar notas</string>
     <string name="week_email_report_header">Reporte semanal:\n\n</string>
     <string name="encouragement_alert_text">Felicitaciones!\n\nEstás haciendo un trabajo excelente!\n\n\uD83C\uDF89 \uD83C\uDF8A \uD83C\uDF89 \uD83C\uDF8A \uD83C\uDF89 \uD83C\uDF8A</string>
+    <string name="dialog_group_hint">Nombre</string>
 
     <string-array name="basic_points_seed">
         <item>Oración</item>
