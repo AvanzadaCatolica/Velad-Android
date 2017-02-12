@@ -45,7 +45,7 @@ public class BasicPointsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            group = Group.getGroup(this, bundle.getString(GROUP_UUID_EXTRA));
+            group = Group.getGroup(bundle.getString(GROUP_UUID_EXTRA));
         } else {
             throw new IllegalStateException("Group UUID not set");
         }
@@ -187,7 +187,7 @@ public class BasicPointsActivity extends AppCompatActivity {
     }
 
     private void deleteBasicPoints(List<Integer> positions) {
-        Realm realm = Realm.getInstance(this);
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
         List<BasicPoint> basicPointsToDelete = new ArrayList<>();
@@ -197,7 +197,7 @@ public class BasicPointsActivity extends AppCompatActivity {
         }
         for (BasicPoint basicPoint: basicPointsToDelete) {
             group.getBasicPoints().remove(basicPoint);
-            basicPoint.removeFromRealm();
+            basicPoint.deleteFromRealm();
         }
 
         realm.commitTransaction();

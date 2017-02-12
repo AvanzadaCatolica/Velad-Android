@@ -37,7 +37,7 @@ public class NoteActivity extends FormWithAppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            Note note = Note.getNote(this, bundle.getString(DiaryFragment.NOTE_UUID_EXTRA));
+            Note note = Note.getNote(bundle.getString(DiaryFragment.NOTE_UUID_EXTRA));
             getModel().setValue(NOTE_TEXT, note.getText());
             getModel().setValue(NOTE_DATE, note.getDate());
             getModel().setValue(NOTE_STATE, NoteState.fromPrint(note.getState()));
@@ -84,14 +84,14 @@ public class NoteActivity extends FormWithAppCompatActivity {
             return;
         }
 
-        Realm realm = Realm.getInstance(this);
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
         Note note;
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-           note = Note.getNote(this, bundle.getString(DiaryFragment.NOTE_UUID_EXTRA));
+           note = Note.getNote(bundle.getString(DiaryFragment.NOTE_UUID_EXTRA));
         } else {
             note = new Note();
         }

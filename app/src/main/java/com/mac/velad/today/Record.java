@@ -20,20 +20,20 @@ public class Record extends RealmObject {
     private BasicPoint basicPoint;
     private String notes;
 
-    public static Record getRecord(Context context, BasicPoint basicPoint, Date date) {
-        Realm realm = Realm.getInstance(context);
+    public static Record getRecord(BasicPoint basicPoint, Date date) {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<Record> result = realm.where(Record.class).equalTo("date", date).equalTo("basicPoint.UUID", basicPoint.getUUID()).findAll();
         return result.size() > 0 ? result.first() : null;
     }
 
-    public static RealmResults<Record> getRecords(Context context, BasicPoint basicPoint, Date startDate, Date endDate) {
-        Realm realm = Realm.getInstance(context);
+    public static RealmResults<Record> getRecords(BasicPoint basicPoint, Date startDate, Date endDate) {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<Record> result = realm.where(Record.class).between("date", startDate, endDate).equalTo("basicPoint.UUID", basicPoint.getUUID()).findAll();
         return result;
     }
 
-    public static int getRecordsCount(Context context, Date date) {
-        Realm realm = Realm.getInstance(context);
+    public static int getRecordsCount(Date date) {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<Record> result = realm.where(Record.class).equalTo("date", date).findAll();
         return result.size();
     }

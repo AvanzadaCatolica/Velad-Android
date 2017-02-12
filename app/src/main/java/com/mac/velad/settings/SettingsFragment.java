@@ -99,7 +99,7 @@ public class SettingsFragment extends Fragment implements EncouragementDialogFra
 
         Setting profile = new Setting(getString(R.string.settings_profile_title), Setting.SettingType.SETTING_TYPE_NORMAL);
         dataSet.add(profile);
-        Setting cheer = new InfoSetting(getString(R.string.settings_cheer_title), Setting.SettingType.SETTING_TYPE_INFO, getEncouragementStatus(Encouragement.getEncouragement(getContext())));
+        Setting cheer = new InfoSetting(getString(R.string.settings_cheer_title), Setting.SettingType.SETTING_TYPE_INFO, getEncouragementStatus(Encouragement.getEncouragement()));
         dataSet.add(cheer);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
@@ -147,7 +147,7 @@ public class SettingsFragment extends Fragment implements EncouragementDialogFra
                         break;
                     }
                     case 1: {
-                        Encouragement encouragement = Encouragement.getEncouragement(getContext());
+                        Encouragement encouragement = Encouragement.getEncouragement();
                         EncouragementDialogFragment dialogFragment = EncouragementDialogFragment.newInstance(encouragement.isEnabled() ? encouragement.getPercentage() : null);
                         dialogFragment.show(getChildFragmentManager(), EncouragementDialogFragment.class.toString());
                     }
@@ -158,10 +158,10 @@ public class SettingsFragment extends Fragment implements EncouragementDialogFra
 
     @Override
     public void onSave(int value) {
-        Realm realm = Realm.getInstance(getContext());
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
-        Encouragement encouragement = Encouragement.getEncouragement(getContext());
+        Encouragement encouragement = Encouragement.getEncouragement();
         encouragement.setPercentage(value);
         encouragement.setEnabled(true);
         realm.copyToRealm(encouragement);
@@ -175,10 +175,10 @@ public class SettingsFragment extends Fragment implements EncouragementDialogFra
 
     @Override
     public void onDeactivate() {
-        Realm realm = Realm.getInstance(getContext());
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
-        Encouragement encouragement = Encouragement.getEncouragement(getContext());
+        Encouragement encouragement = Encouragement.getEncouragement();
         encouragement.setEnabled(false);
         realm.copyToRealm(encouragement);
 

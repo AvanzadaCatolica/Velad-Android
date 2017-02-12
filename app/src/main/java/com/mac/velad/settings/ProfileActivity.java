@@ -37,7 +37,7 @@ public class ProfileActivity extends FormWithAppCompatActivity {
 
         getFormController().addSection(section);
 
-        Profile profile = Profile.getProfile(this);
+        Profile profile = Profile.getProfile();
         if (profile != null) {
             getModel().setValue(PROFILE_NAME, profile.getName());
             getModel().setValue(PROFILE_CIRCLE, profile.getCircle());
@@ -85,10 +85,10 @@ public class ProfileActivity extends FormWithAppCompatActivity {
         String circle = (String) getModel().getValue(PROFILE_CIRCLE);
         String group = (String) getModel().getValue(PROFILE_GROUP);
 
-        Realm realm = Realm.getInstance(this);
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
-        Profile profile = Profile.getProfile(this);
+        Profile profile = Profile.getProfile();
         if (profile == null) {
             profile = new Profile();
             profile.setUUID(UUID.randomUUID().toString());

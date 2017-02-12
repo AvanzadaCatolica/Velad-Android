@@ -87,7 +87,7 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
         }
         DateFormat dateFormat = new DateFormat("EEEE");
 
-        RealmResults<Group> groups = Group.getAll(getContext());
+        RealmResults<Group> groups = Group.getAll();
         for (Group group :groups) {
             for (BasicPoint basicPoint : group.getBasicPoints()) {
                 if (basicPoint.isEnabled() &&
@@ -95,7 +95,7 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
                     if (!dataSet.contains(group)) {
                         dataSet.add(group);
                     }
-                    TodayViewModel viewModel = new TodayViewModel(Record.getRecord(getContext(), basicPoint, selectedDate), basicPoint);
+                    TodayViewModel viewModel = new TodayViewModel(Record.getRecord(basicPoint, selectedDate), basicPoint);
                     dataSet.add(viewModel);
                 }
             }
@@ -140,13 +140,13 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
     }
 
     private void showEncouragement() {
-        Encouragement encouragement = Encouragement.getEncouragement(getContext());
+        Encouragement encouragement = Encouragement.getEncouragement();
         if (!encouragement.isEnabled()) {
             return;
         }
 
         DatePickerFragment fragment = (DatePickerFragment) getChildFragmentManager().findFragmentByTag(DatePickerFragment.class.toString());
-        int recordsCount = Record.getRecordsCount(getContext(), fragment.getSelectedDate());
+        int recordsCount = Record.getRecordsCount(fragment.getSelectedDate());
 
         int totalCount = 0;
         for (Object object : dataSet) {
@@ -159,12 +159,12 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
             return;
         }
 
-        ShownDate shownDate = ShownDate.getShowDate(getContext(), fragment.getSelectedDate());
+        ShownDate shownDate = ShownDate.getShowDate(fragment.getSelectedDate());
         if (shownDate != null) {
             return;
         }
 
-        Realm realm = Realm.getInstance(getContext());
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
         shownDate = new ShownDate();
@@ -196,7 +196,7 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
         TodayViewModel viewModel = (TodayViewModel) objectAtIndex;
         DatePickerFragment fragment = (DatePickerFragment) getChildFragmentManager().findFragmentByTag(DatePickerFragment.class.toString());
 
-        Realm realm = Realm.getInstance(getContext());
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
         boolean added = false;
@@ -207,12 +207,11 @@ public class TodayFragment extends Fragment implements DatePickerFragment.DatePi
                 record.setNotes(notes);
                 realm.copyToRealm(record);
             } else {
-                viewModel.getRecord().removeFromRealm();
+                viewModel.getRecord().deleteFromRealm();
                 viewModel.setRecord(null);
             }
         } else {
-            Record record = realm.createObject(Record.class);
-            record.setUUID(UUID.randomUUID().toString());
+            Record record = realm.createObject(Record.class, UUID.randomUUID().toString());
             record.setDate(fragment.getSelectedDate());
             record.setBasicPoint(viewModel.getBasicPoint());
             record.setNotes(notes);

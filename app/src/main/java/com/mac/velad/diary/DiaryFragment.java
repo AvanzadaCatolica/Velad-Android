@@ -65,7 +65,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setupFloatingButton();
-        dataSet = Note.getAll(getContext());
+        dataSet = Note.getAll();
     }
 
     @Override
@@ -154,7 +154,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         StringBuilder builder = new StringBuilder();
         DateFormat dateFormat = new DateFormat("dd/MM/yyyy");
 
-        Profile profile = Profile.getProfile(getContext());
+        Profile profile = Profile.getProfile();
         if (profile != null) {
             builder.append(Profile.profileInformation(getContext(), profile));
         }
@@ -164,7 +164,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
             builder.append(String.format(getString(R.string.diary_email_week_format), fragment.getTitle()));
         }
 
-        Confession confession = Confession.getLastConfession(getContext());
+        Confession confession = Confession.getLastConfession();
         if (confession != null) {
             builder.append(String.format(getString(R.string.diary_email_confession_format), dateFormat.format(confession.getDate())));
         }
@@ -194,7 +194,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
     }
 
     private void registerConfession() {
-        Realm realm = Realm.getInstance(getContext());
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
         Date now = new Date();
@@ -216,7 +216,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
 
     private void updateFragment() {
         adapter.notifyDataSetChanged();
-        adapter.setConfession(Confession.getLastConfession(getContext()));
+        adapter.setConfession(Confession.getLastConfession());
         updateContentEmpty();
         getActivity().invalidateOptionsMenu();
     }
@@ -268,7 +268,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext()));
 
         adapter = new NoteAdapter(getContext(), dataSet, multiSelector);
-        adapter.setConfession(Confession.getLastConfession(getContext()));
+        adapter.setConfession(Confession.getLastConfession());
         recyclerView.setAdapter(adapter);
 
         ItemClickSupport support = ItemClickSupport.addTo(recyclerView);
@@ -362,7 +362,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
     }
 
     private void deleteNotes(List<Integer> positions) {
-        Realm realm = Realm.getInstance(getContext());
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
         List<Note> notesToDelete = new ArrayList<>();
@@ -371,7 +371,7 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
             notesToDelete.add(note);
         }
         for (Note note : notesToDelete) {
-            note.removeFromRealm();
+            note.deleteFromRealm();
         }
 
         realm.commitTransaction();
@@ -394,23 +394,23 @@ public class DiaryFragment extends Fragment implements DateIntervalPickerFragmen
 
         switch (filterType) {
             case DIARY_FILTER_TYPE_ALL:
-                dataSet = Note.getAll(getContext());
+                dataSet = Note.getAll();
                 break;
             case DIARY_FILTER_TYPE_REGULAR:
-                dataSet = Note.getNotes(getContext(), NoteState.REGULAR);
+                dataSet = Note.getNotes(NoteState.REGULAR);
                 break;
             case DIARY_FILTER_TYPE_CONFESSABLE:
-                dataSet = Note.getNotes(getContext(), NoteState.CONFESSABLE);
+                dataSet = Note.getNotes(NoteState.CONFESSABLE);
                 break;
             case DIARY_FILTER_TYPE_CONFESSED:
-                dataSet = Note.getNotes(getContext(), NoteState.CONFESSED);
+                dataSet = Note.getNotes(NoteState.CONFESSED);
                 break;
             case DIARY_FILTER_TYPE_GUIDANCE:
-                dataSet = Note.getNotes(getContext(), NoteState.GUIDANCE);
+                dataSet = Note.getNotes(NoteState.GUIDANCE);
                 break;
             case DIARY_FILTER_TYPE_WEEKLY:
                 DateIntervalPickerFragment fragment = (DateIntervalPickerFragment) getChildFragmentManager().findFragmentByTag(DateIntervalPickerFragment.class.toString());
-                dataSet = Note.getNotesBetween(getContext(), fragment.getSelectedStartDate(), fragment.getSelectedEndDate());
+                dataSet = Note.getNotesBetween(fragment.getSelectedStartDate(), fragment.getSelectedEndDate());
                 break;
         }
 

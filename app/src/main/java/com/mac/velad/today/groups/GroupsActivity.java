@@ -45,7 +45,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupDialogFrag
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        dataSet = Group.getAll(this);
+        dataSet = Group.getAll();
         setupRecyclerView();
         setupFloatingButton();
         setupEmptyView();
@@ -211,7 +211,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupDialogFrag
     }
 
     private void deleteGroups(List<Integer> positions) {
-        Realm realm = Realm.getInstance(this);
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
         List<Group> groupsToDelete = new ArrayList<>();
@@ -220,7 +220,7 @@ public class GroupsActivity extends AppCompatActivity implements GroupDialogFrag
             groupsToDelete.add(group);
         }
         for (Group group: groupsToDelete) {
-            group.removeFromRealm();
+            group.deleteFromRealm();
         }
 
         realm.commitTransaction();
@@ -239,11 +239,10 @@ public class GroupsActivity extends AppCompatActivity implements GroupDialogFrag
 
     @Override
     public void onInputGroup(String name) {
-        Realm realm = Realm.getInstance(this);
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
-        Group group = realm.createObject(Group.class);
-        group.setUUID(UUID.randomUUID().toString());
+        Group group = realm.createObject(Group.class, UUID.randomUUID().toString());
         group.setName(name);
         group.setCreatedAt(new Date());
         realm.copyToRealm(group);
