@@ -17,8 +17,8 @@ public class Encouragement extends RealmObject {
     private boolean enabled;
     private int percentage;
 
-    public static Encouragement getEncouragement(Context context) {
-        Realm realm = Realm.getInstance(context);
+    public static Encouragement getEncouragement() {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<Encouragement> result = realm.where(Encouragement.class).findAll();
         return result.first();
     }

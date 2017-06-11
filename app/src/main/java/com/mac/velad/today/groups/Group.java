@@ -1,6 +1,8 @@
-package com.mac.velad.today;
+package com.mac.velad.today.groups;
 
 import android.content.Context;
+
+import com.mac.velad.today.BasicPoint;
 
 import java.util.Date;
 
@@ -22,11 +24,17 @@ public class Group extends RealmObject {
     private RealmList<BasicPoint> basicPoints;
     private Date createdAt;
 
-    public static RealmResults<Group> getAll(Context context) {
-        Realm realm = Realm.getInstance(context);
+    public static RealmResults<Group> getAll() {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<Group> result = realm.where(Group.class).findAll();
         result.sort("createdAt", Sort.DESCENDING);
         return result;
+    }
+
+    public static Group getGroup(String UUID) {
+        Realm realm = Realm.getDefaultInstance();
+        RealmResults<Group> result = realm.where(Group.class).equalTo("UUID", UUID).findAll();
+        return result.first();
     }
 
     public String getUUID() {

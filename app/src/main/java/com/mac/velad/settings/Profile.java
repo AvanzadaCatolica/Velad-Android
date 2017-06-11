@@ -20,8 +20,8 @@ public class Profile extends RealmObject {
     private String circle;
     private String group;
 
-    public static Profile getProfile(Context context) {
-        Realm realm = Realm.getInstance(context);
+    public static Profile getProfile() {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<Profile> result = realm.where(Profile.class).findAll();
         return result.size() > 0 ? result.first() : null;
     }

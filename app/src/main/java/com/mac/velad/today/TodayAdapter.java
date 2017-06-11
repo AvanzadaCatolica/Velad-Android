@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mac.velad.R;
+import com.mac.velad.today.groups.Group;
 
 import java.util.List;
 

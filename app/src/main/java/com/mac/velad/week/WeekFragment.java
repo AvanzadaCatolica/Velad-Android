@@ -19,7 +19,7 @@ import com.mac.velad.general.DateIntervalPickerFragment;
 import com.mac.velad.general.DividerItemDecoration;
 import com.mac.velad.settings.Profile;
 import com.mac.velad.today.BasicPoint;
-import com.mac.velad.today.Group;
+import com.mac.velad.today.groups.Group;
 import com.mac.velad.today.Record;
 
 import java.util.ArrayList;
@@ -66,14 +66,14 @@ public class WeekFragment extends Fragment implements DateIntervalPickerFragment
             selectedEndDate = fragment.getSelectedEndDate();
         }
 
-        RealmResults<Group> groups = Group.getAll(getContext());
+        RealmResults<Group> groups = Group.getAll();
         for (Group group :groups) {
             for (BasicPoint basicPoint : group.getBasicPoints()) {
                 if (basicPoint.isEnabled()) {
                     if (!dataSet.contains(group)) {
                         dataSet.add(group);
                     }
-                    RealmResults<Record> records = Record.getRecords(getContext(), basicPoint, selectedStartDate, selectedEndDate);
+                    RealmResults<Record> records = Record.getRecords(basicPoint, selectedStartDate, selectedEndDate);
                     WeekViewModel viewModel = new WeekViewModel(basicPoint, records.size());
                     dataSet.add(viewModel);
                 }
@@ -147,7 +147,7 @@ public class WeekFragment extends Fragment implements DateIntervalPickerFragment
     private void mail() {
         StringBuilder builder = new StringBuilder();
 
-        Profile profile = Profile.getProfile(getContext());
+        Profile profile = Profile.getProfile();
         if (profile != null) {
             builder.append(Profile.profileInformation(getContext(), profile));
         }

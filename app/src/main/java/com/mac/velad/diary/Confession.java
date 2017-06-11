@@ -20,8 +20,8 @@ public class Confession extends RealmObject {
 
     private Date date;
 
-    public static Confession getLastConfession(Context context) {
-        Realm realm = Realm.getInstance(context);
+    public static Confession getLastConfession() {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<Confession> result = realm.where(Confession.class).findAll();
         result.sort("date", Sort.DESCENDING);
         return result.size() > 0 ? result.first() : null;

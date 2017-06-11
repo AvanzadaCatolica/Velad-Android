@@ -18,8 +18,8 @@ public class ShownDate extends RealmObject {
     private String UUID;
     private Date date;
 
-    public static ShownDate getShowDate(Context context, Date date) {
-        Realm realm = Realm.getInstance(context);
+    public static ShownDate getShowDate(Date date) {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<ShownDate> result = realm.where(ShownDate.class).equalTo("date", date).findAll();
         return result.size() > 0 ? result.first() : null;
     }

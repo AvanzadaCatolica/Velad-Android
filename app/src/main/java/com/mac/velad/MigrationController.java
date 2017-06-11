@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.mac.velad.today.BasicPoint;
 import com.mac.velad.today.Encouragement;
-import com.mac.velad.today.Group;
+import com.mac.velad.today.groups.Group;
 import com.mac.velad.today.WeekDay;
 
 import java.text.DateFormatSymbols;
@@ -39,11 +39,10 @@ public class MigrationController {
         editor.putBoolean(SHARED_PREFERENCES_DATABASE_SEEDED, true);
         editor.apply();
 
-        Realm realm = Realm.getInstance(context);
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
-        Group group = realm.createObject(Group.class);
-        group.setUUID(UUID.randomUUID().toString());
+        Group group = realm.createObject(Group.class, UUID.randomUUID().toString());
         group.setName(context.getString(R.string.default_group_name));
         group.setCreatedAt(new Date());
         realm.copyToRealm(group);
@@ -51,8 +50,7 @@ public class MigrationController {
         List<String> names = Arrays.asList(context.getResources().getStringArray(R.array.basic_points_seed));
         DateFormatSymbols symbols = new DateFormatSymbols(new Locale("es"));
         for (String name : names) {
-            BasicPoint basicPoint = realm.createObject(BasicPoint.class);
-            basicPoint.setUUID(UUID.randomUUID().toString());
+            BasicPoint basicPoint = realm.createObject(BasicPoint.class, UUID.randomUUID().toString());
             basicPoint.setName(name);
             basicPoint.setDescription("");
             basicPoint.setEnabled(true);

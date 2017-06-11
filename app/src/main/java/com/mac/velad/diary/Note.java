@@ -22,29 +22,29 @@ public class Note extends RealmObject {
     private String state;
     private Date date;
 
-    public static RealmResults<Note> getAll(Context context) {
-        Realm realm = Realm.getInstance(context);
+    public static RealmResults<Note> getAll() {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<Note> result = realm.where(Note.class).findAll();
         result.sort("date", Sort.DESCENDING);
         return result;
     }
 
-    public static RealmResults<Note> getNotesBetween(Context context, Date startDate, Date endDate) {
-        Realm realm = Realm.getInstance(context);
+    public static RealmResults<Note> getNotesBetween(Date startDate, Date endDate) {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<Note> result = realm.where(Note.class).between("date", startDate, endDate).findAll();
         result.sort("date", Sort.DESCENDING);
         return result;
     }
 
-    public static RealmResults<Note> getNotes(Context context, NoteState noteState) {
-        Realm realm = Realm.getInstance(context);
+    public static RealmResults<Note> getNotes(NoteState noteState) {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<Note> result = realm.where(Note.class).equalTo("state", noteState.toString()).findAll();
         result.sort("date", Sort.DESCENDING);
         return result;
     }
 
-    public static Note getNote(Context context, String UUID) {
-        Realm realm = Realm.getInstance(context);
+    public static Note getNote(String UUID) {
+        Realm realm = Realm.getDefaultInstance();
         RealmResults<Note> result = realm.where(Note.class).equalTo("UUID", UUID).findAll();
         return result.first();
     }

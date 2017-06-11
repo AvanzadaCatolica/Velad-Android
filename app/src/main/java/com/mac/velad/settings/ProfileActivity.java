@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.github.dkharrat.nexusdialog.FormController;
 import com.github.dkharrat.nexusdialog.FormWithAppCompatActivity;
 import com.github.dkharrat.nexusdialog.controllers.EditTextController;
 import com.github.dkharrat.nexusdialog.controllers.FormSectionController;
@@ -29,19 +30,19 @@ public class ProfileActivity extends FormWithAppCompatActivity {
     public final static String SHARED_PREFERENCES_PROFILE_LATER = "com.velad.SHARED_PREFERENCES_PROFILE_LATER";
 
     @Override
-    protected void initForm() {
+    public void initForm(FormController controller) {
         FormSectionController section = new FormSectionController(this);
         section.addElement(new EditTextController(this, PROFILE_NAME, getString(R.string.profile_form_field_name), null, false));
         section.addElement(new EditTextController(this, PROFILE_CIRCLE, getString(R.string.profile_form_field_circle), null, false));
         section.addElement(new EditTextController(this, PROFILE_GROUP, getString(R.string.profile_form_field_group), null, false));
 
-        getFormController().addSection(section);
+        controller.addSection(section);
 
-        Profile profile = Profile.getProfile(this);
+        Profile profile = Profile.getProfile();
         if (profile != null) {
-            getModel().setValue(PROFILE_NAME, profile.getName());
-            getModel().setValue(PROFILE_CIRCLE, profile.getCircle());
-            getModel().setValue(PROFILE_GROUP, profile.getGroup());
+            controller.getModel().setValue(PROFILE_NAME, profile.getName());
+            controller.getModel().setValue(PROFILE_CIRCLE, profile.getCircle());
+            controller.getModel().setValue(PROFILE_GROUP, profile.getGroup());
         }
 
         if (!getIntent().getExtras().getBoolean(SplashActivity.FIRST_LAUNCH)) {
@@ -85,10 +86,10 @@ public class ProfileActivity extends FormWithAppCompatActivity {
         String circle = (String) getModel().getValue(PROFILE_CIRCLE);
         String group = (String) getModel().getValue(PROFILE_GROUP);
 
-        Realm realm = Realm.getInstance(this);
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
-        Profile profile = Profile.getProfile(this);
+        Profile profile = Profile.getProfile();
         if (profile == null) {
             profile = new Profile();
             profile.setUUID(UUID.randomUUID().toString());

@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.github.dkharrat.nexusdialog.FormController;
 import com.github.dkharrat.nexusdialog.FormWithAppCompatActivity;
 import com.github.dkharrat.nexusdialog.controllers.DatePickerController;
 import com.github.dkharrat.nexusdialog.controllers.EditTextController;
@@ -28,22 +29,22 @@ public class NoteActivity extends FormWithAppCompatActivity {
     private final static String NOTE_STATE = "NOTE_STATE";
 
     @Override
-    protected void initForm() {
+    public void initForm(FormController controller) {
         FormSectionController section = new FormSectionController(this);
         section.addElement(new EditTextController(this, NOTE_TEXT, getString(R.string.note_form_field_note), null, true));
         section.addElement(new DatePickerController(this, NOTE_DATE, getString(R.string.note_form_field_date), true, new DateFormat("dd MMM yyyy")));
         section.addElement(new SelectionController(this, NOTE_STATE, getString(R.string.note_form_field_type), true, null, Arrays.asList(NoteState.states()), Arrays.asList(NoteState.values())));
-        getFormController().addSection(section);
+        controller.addSection(section);
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            Note note = Note.getNote(this, bundle.getString(DiaryFragment.NOTE_UUID_EXTRA));
-            getModel().setValue(NOTE_TEXT, note.getText());
-            getModel().setValue(NOTE_DATE, note.getDate());
-            getModel().setValue(NOTE_STATE, NoteState.fromPrint(note.getState()));
+            Note note = Note.getNote(bundle.getString(DiaryFragment.NOTE_UUID_EXTRA));
+            controller.getModel().setValue(NOTE_TEXT, note.getText());
+            controller.getModel().setValue(NOTE_DATE, note.getDate());
+            controller.getModel().setValue(NOTE_STATE, NoteState.fromPrint(note.getState()));
         } else {
-            getModel().setValue(NOTE_DATE, new Date());
-            getModel().setValue(NOTE_STATE, NoteState.REGULAR);
+            controller.getModel().setValue(NOTE_DATE, new Date());
+            controller.getModel().setValue(NOTE_STATE, NoteState.REGULAR);
         }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -84,14 +85,14 @@ public class NoteActivity extends FormWithAppCompatActivity {
             return;
         }
 
-        Realm realm = Realm.getInstance(this);
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
 
         Note note;
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-           note = Note.getNote(this, bundle.getString(DiaryFragment.NOTE_UUID_EXTRA));
+           note = Note.getNote(bundle.getString(DiaryFragment.NOTE_UUID_EXTRA));
         } else {
             note = new Note();
         }
